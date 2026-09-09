@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style data-omelette-injected>html,body{background:transparent}</style><script data-omelette-injected>(()=>{{const n=new URLSearchParams(location.search).get("theme");if(n==="light"||n==="dark"){document.documentElement.dataset.theme=n}}{if(new URLSearchParams(location.search).get("_omthumb")==="1"){const n=(f)=>{const g=f.focus;if(!g)return;f.focus=function(h){g.call(this,{...h,preventScroll:true})}};n(HTMLElement.prototype);n(SVGElement.prototype);if(typeof MathMLElement!=="undefined"){n(MathMLElement.prototype)}const d=(f)=>{f.removeAttribute("autofocus");f.inert=true;if(!(f instanceof HTMLElement))f.removeAttribute("tabindex")};const p=(f)=>{if(f.hasAttribute("autofocus"))d(f);for(const g of f.querySelectorAll("[autofocus]")){d(g)}};p(document.documentElement);new MutationObserver((f)=>{for(const g of f){for(const h of g.addedNodes){if(h.nodeType===1)p(h)}}}).observe(document,{childList:true,subtree:true})}}{const n=()=>{try{if(document.querySelector('meta[name="color-scheme"]'))return;const d=getComputedStyle(document.documentElement).getPropertyValue("color-scheme").trim();if(d&&d!=="normal")return;const p=(y)=>{if(!y)return null;const m=getComputedStyle(y).backgroundColor.match(/^rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)(?:[,\s/]+([\d.]+%?))?\s*\)$/);if(!m)return null;const w=m[4]==null?1:parseFloat(m[4])/(m[4].endsWith("%")?100:1);if(w<0.99)return null;return[+m[1],+m[2],+m[3]]};const f=p(document.body)||p(document.documentElement);if(!f)return;const g=(y)=>{const m=y/255;return m<=0.04045?m/12.92:((m+0.055)/1.055)**2.4};const h=0.2126*g(f[0])+0.7152*g(f[1])+0.0722*g(f[2]);document.documentElement.style.setProperty("color-scheme",h<0.4?"dark":"light")}catch{}};if(document.readyState==="complete")n();else window.addEventListener("load",n)}var I=[];var B=false;var K=false;var C=()=>{};if(K===true){try{const n=setTimeout.bind(window);const d=1e4;const p=15;const f=1e4;const g=120000;const h=200;const y=(o)=>{try{let r;if(typeof o==="string")r=o;else if(o instanceof URL)r=o.href;else if(typeof Request!=="undefined"&&o instanceof Request)r=o.url;else return null;if(!r)return null;const l=document.baseURI;const i=new URL(r,l);if(i.protocol!=="http:"&&i.protocol!=="https:")return null;if(i.origin!==new URL(l).origin)return null;return i.origin+i.pathname}catch{return null}};const m=new Map;const w=(o)=>{let r=m.get(o);if(!r){if(m.size>=h){const l=m.keys().next().value;if(l!==undefined)m.delete(l)}r={fails:[],until:0,cooldown:f,hard:false};m.set(o,r)}return r};const R=(o)=>{const r=m.get(o);return r!==undefined&&r.until>Date.now()};const O=(o,r)=>{const l=Date.now();const i=w(o);if(r)i.hard=true;if(i.until>l)return;i.fails.push(l);while(i.fails.length>0&&i.fails[0]<=l-d)i.fails.shift();if(i.fails.length>=p){i.until=l+i.cooldown;if(i.hard)i.cooldown=Math.min(i.cooldown*2,g);i.fails.length=0;try{n(()=>{try{S(true)}catch{}},i.until-l+100)}catch{}console.warn("[omelette] asset circuit breaker: pausing requests to "+o+" for "+Math.round((i.until-l)/1000)+"s after "+p+" failures in "+d/1000+"s")}};const e=(o)=>{m.delete(o)};const t=100;const a=new WeakMap;const u=new Set;let s=null;const S=(o)=>{for(const r of Array.from(u)){try{const l=a.get(r);if(l===undefined){u.delete(r);continue}if(o){const i=y(l);if(i!==null&&R(i))continue}a.delete(r);u.delete(r);if(s!==null)s.call(r,l)}catch{}}};C=()=>{try{m.clear();S(false)}catch{}};document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")C()});const _=window.fetch;if(typeof _==="function"){const o=function(...r){let l=null;try{l=y(r[0])}catch{}if(l!==null&&R(l)){let c;try{if(r[1]&&r[1].signal!==undefined){c=r[1].signal||undefined}else if(typeof Request!=="undefined"&&r[0]instanceof Request){c=r[0].signal||undefined}}catch{c=undefined}return new Promise((k,b)=>{const E=()=>{try{return c.reason!==undefined?c.reason:new DOMException("The operation was aborted.","AbortError")}catch{return new DOMException("The operation was aborted.","AbortError")}};try{if(c&&c.aborted){b(E());return}}catch{}let T=false;const j=()=>{if(T)return;T=true;b(E())};try{if(c)c.addEventListener("abort",j,{once:true})}catch{}n(()=>{if(T)return;T=true;try{if(c)c.removeEventListener("abort",j)}catch{}let L;try{L=new Response(null,{status:429,statusText:"Too Many Requests",headers:{"Retry-After":"10"}})}catch{L={ok:false,status:429}}k(L)},250)})}const i=_.apply(window,r);if(l!==null){const c=l;i.then((k)=>{try{if(k.ok)e(c);else if(k.status===401||k.status===403||k.status===404||k.status===429){O(c,k.status!==404)}}catch{}},()=>{})}return i};window.fetch=o}const v=Object.getOwnPropertyDescriptor(HTMLImageElement.prototype,"src");if(v!==undefined&&v.set!==undefined&&v.get!==undefined){const o=v.set;s=o;Object.defineProperty(HTMLImageElement.prototype,"src",{configurable:true,enumerable:v.enumerable,get:v.get,set(r){const l=`${r}`;try{const i=y(l);if(i!==null&&R(i)){a.set(this,l);if(u.size<t)u.add(this);return}}catch{}try{a.delete(this);u.delete(this)}catch{}o.call(this,l)}})}try{const o=HTMLImageElement.prototype.setAttribute;HTMLImageElement.prototype.setAttribute=function(r,l){if(arguments.length<2){o.apply(this,arguments);return}if(typeof r==="string"&&r.toLowerCase()==="src"){const i=`${l}`;try{const c=y(i);if(c!==null&&R(c)){a.set(this,i);if(u.size<t)u.add(this);return}a.delete(this);u.delete(this)}catch{}o.call(this,r,i);return}o.call(this,r,l)}}catch{}window.addEventListener("error",(o)=>{try{const r=o.target;if(r instanceof HTMLImageElement){const l=y(r.currentSrc||r.src||"");if(l!==null)O(l,true)}}catch{}},true);window.addEventListener("load",(o)=>{try{const r=o.target;if(r instanceof HTMLImageElement){const l=y(r.currentSrc||r.src||"");if(l!==null)e(l);const i=a.get(r);if(i!==undefined){let c=false;try{c=new URL(i,document.baseURI).href===new URL(r.currentSrc||r.src||"",document.baseURI).href}catch{c=false}if(c){a.delete(r);u.delete(r)}}}}catch{}},true)}catch{}}var J=30000;var G=3000;document.addEventListener("DOMContentLoaded",()=>{const n=window.Babel;const d="om-src-id";if(n&&n.registerPlugin&&!(n.availablePlugins&&n.availablePlugins[d])){n.registerPlugin(d,({types:h})=>({visitor:{JSXOpeningElement(y,m){const w=y.node;if(w.name&&w.name.type==="JSXMemberExpression")return;for(let t=0;t<w.attributes.length;t++){const a=w.attributes[t];if(a.type==="JSXAttribute"&&a.name&&a.name.name==="data-om-id")return}const R=m.file&&m.file.opts&&m.file.opts.filename||"?";const O=w.loc&&w.loc.start;const e=`jsx:${R}:${w.start??0}:${O?O.line:0}:${O?O.column+1:0}`;w.attributes.push(h.jsxAttribute(h.jsxIdentifier("data-om-id"),h.stringLiteral(e)))}}}))}const p="om-text-extract";let f=false;if(B&&n&&n.registerPlugin&&!(n.availablePlugins&&n.availablePlugins[p])){const h=window.React;if(h&&h.useSyncExternalStore&&h.createElement){f=true;const y={};const m=new Set;let w=0;window.__omTextO=y;window.__omTextSet=(e)=>{for(const t in e){const a=e[t];if(a==null)delete y[t];else y[t]=a}w++;m.forEach((t)=>t())};const R=(e)=>{m.add(e);return()=>m.delete(e)};const O=()=>w;window.__OmT=function e(t){h.useSyncExternalStore(R,O,O);return h.createElement("span",{"data-om-text":t.i,className:"__om-t"},t.i in y?y[t.i]:t.children)};n.registerPlugin(p,({types:e})=>{const t={style:1,script:1,noscript:1,textarea:1,title:1,option:1,text:1,tspan:1,textPath:1};const a={placeholder:1,alt:1,title:1,label:1,"aria-label":1,"aria-description":1,"aria-placeholder":1};const u=(o,r)=>e.logicalExpression("??",e.memberExpression(e.logicalExpression("||",e.memberExpression(e.identifier("window"),e.identifier("__omTextO")),e.objectExpression([])),e.stringLiteral(o),true),r);const s=(o)=>o.file&&o.file.opts&&o.file.opts.filename||"?";const S=(o)=>o.file&&o.file.code||"";const _=(o,r)=>{const l=(c)=>c&&c.start!=null&&c.end!=null&&(c.type==="StringLiteral"||c.type==="TemplateLiteral"&&c.expressions.length===0)?[c.start,c.end]:null;const i=l(r);if(i)return i;if(r&&r.type==="Identifier"){const c=o.scope.getBinding(r.name);if(c&&c.constant&&c.path.node.type==="VariableDeclarator"){return l(c.path.node.init)}}return null};const v=(o,r,l)=>{const i=o.node;let c=false;const k=(E,T)=>{c=true;return e.jsxElement(e.jsxOpeningElement(e.jsxIdentifier("__OmT"),[e.jsxAttribute(e.jsxIdentifier("i"),e.stringLiteral(E))],false),e.jsxClosingElement(e.jsxIdentifier("__OmT")),[T],false)};const b=i.children.map((E)=>{if(E.type==="JSXText"){if(E.start==null||E.end==null)return E;const T=l.slice(E.start,E.end);const j=T.length-T.trimStart().length;const L=T.length-T.trimEnd().length;if(j+L>=T.length)return E;return k(`txt:${r}:${E.start+j}:${E.end-L}`,E)}if(E.type==="JSXExpressionContainer"){const T=_(o,E.expression);if(T)return k(`str:${r}:${T[0]}:${T[1]}`,E)}return E});if(c)i.children=b};return{visitor:{JSXOpeningElement(o,r){const l=o.node;const i=s(r);const c={};for(let k=0;k<l.attributes.length;k++){const b=l.attributes[k];if(b.type!=="JSXAttribute"||!b.name)continue;const E=b.name.name;if(!a[E])continue;if(!b.value||b.value.type!=="StringLiteral")continue;if(b.value.start==null||b.value.end==null)continue;const T=`txt:${i}:${b.value.start}:${b.value.end}`;c[E]=T;b.value=e.jsxExpressionContainer(u(T,e.stringLiteral(b.value.value)))}if(Object.keys(c).length){l.attributes.push(e.jsxAttribute(e.jsxIdentifier("data-om-text-attrs"),e.stringLiteral(JSON.stringify(c))))}},JSXElement(o,r){const l=o.node.openingElement;const i=l&&l.name&&l.name.name;if(i==="__OmT")return;if(typeof i==="string"&&t[i])return;v(o,s(r),S(r))},JSXFragment(o,r){v(o,s(r),S(r))}}}})}}const g=f?["transform-react-jsx-source",d,p]:["transform-react-jsx-source",d];document.querySelectorAll('script[type="text/babel"],script[type="text/jsx"]').forEach((h,y)=>{const m=h.getAttribute("data-plugins")||"";const w=g.filter((R)=>m.indexOf(R)<0);if(w.length){h.setAttribute("data-plugins",m?`${m},${w.join(",")}`:w.join(","))}if(!h.hasAttribute("data-filename")){h.setAttribute("data-filename",h.getAttribute("src")||`inline-${y}`)}})});var A=window.parent;var U="not editable here — open the project in the Claude Design editor to save";var W=()=>Promise.resolve({persisted:false,noHost:true,reason:U});var H=W;var M="data/storage.json";var z=()=>{try{const n=new URL(document.baseURI);const d=n.pathname.match(/\/projects\/([^/]+)\/serve\//);if(d)return d[1];return n.hostname.split(".")[0]||""}catch{return location.hostname.split(".")[0]||""}};var Z=()=>{try{const n=new URL(document.baseURI);const d=n.pathname.indexOf("/serve/");if(d>=0)return n.origin+n.pathname.slice(0,d+"/serve/".length)+M}catch{}return"./"+M};var x=null;var N=()=>{if(!x){x=fetch(Z(),{cache:"no-store"}).then((n)=>{if(n.ok)return n.text();return n.status===404?"":null}).catch(()=>null).then((n)=>{if(n===null){x=null;return null}const d=new Map;if(!n)return d;let p;try{p=JSON.parse(n)}catch{console.warn("[omelette.storage] "+M+" is not valid JSON; treating the store as unreadable so a save cannot overwrite the "+"hand-edited bytes. Fix the JSON (or delete the file) to re-enable persistence.");x=null;return null}if(p===null||typeof p!=="object"||Array.isArray(p)){console.warn("[omelette.storage] "+M+" doesn't hold a JSON object; treating the store as unreadable so a save cannot "+"overwrite the hand-edited bytes. Make the top level a JSON object to re-enable persistence.");x=null;return null}const f=p;if("data"in f){const g=f.data;if(g===null||typeof g!=="object"||Array.isArray(g)){console.warn("[omelette.storage] "+M+' has a "data" field that is not a JSON object; treating the store as unreadable so a '+'save cannot overwrite the hand-edited bytes. Make "data" a JSON object to re-enable persistence.');x=null;return null}const h=f._meta;const y=h!==null&&typeof h==="object"?h.project:undefined;if(typeof y==="string"&&y!==""&&y!==z())return d;for(const m of Object.keys(g))d.set(m,g[m]);return d}for(const g of Object.keys(f)){if(g!=="_meta")d.set(g,f[g])}return d})}return x};var F=(n)=>H(M,JSON.stringify({_meta:{project:z(),version:1},data:Object.fromEntries(n)},null,2));var D=Promise.resolve();var $=(n)=>{const d=D.then(n);D=d.then(()=>{return},()=>{return});return d};var V=/sk-(?:ant-)?[A-Za-z0-9_-]{16,}|AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{20,}|xox[a-z]-[A-Za-z0-9][A-Za-z0-9-]{9,}|AIza[0-9A-Za-z_-]{30,}|-----BEGIN [A-Z ]*PRIVATE KEY-----/;var Y=/password|passwd|secret|api[_-]?key|access[_-]?token|auth[_-]?token|credential/i;var Q=(n,d,p)=>{if(V.test(d)||Y.test(n)&&typeof p==="string"&&p.length>=8){console.warn('[omelette.storage] the value for "'+n+'" looks like a credential. The storage file is a plaintext project file — visible to '+"everyone with project access and copied when the project is duplicated. Do not store secrets here.")}};var q={persisted:false,reason:"could not load the existing store — not overwriting it"};var X={persisted:false,reason:"stored value changed since a failed read — re-read this key before saving"};var P=new Set;var ee={get:(n)=>{if(typeof n!=="string"){return Promise.reject(new TypeError("storage.get: key must be a string"))}return $(N).then((d)=>{if(d===null){P.add(n);return null}P.delete(n);if(!d.has(n))return null;const p=d.get(n);return p==null?null:JSON.parse(JSON.stringify(p))})},set:(n,d)=>{if(typeof n!=="string"){return Promise.reject(new TypeError("storage.set: key must be a string"))}let p;try{p=JSON.stringify(d)}catch(g){return Promise.reject(new TypeError("storage.set: value must be JSON-serializable ("+String(g)+")"))}if(p===undefined){return Promise.reject(new TypeError("storage.set: value must be JSON-serializable"))}Q(n,p,d);const f=JSON.parse(p);return $(()=>N().then((g)=>{if(g===null)return q;if(P.has(n)){if(g.has(n))return X;P.delete(n)}g.set(n,f);return F(g)}))},delete:(n)=>{if(typeof n!=="string"){return Promise.reject(new TypeError("storage.delete: key must be a string"))}return $(()=>N().then((d)=>{if(d===null)return q;if(P.has(n)){if(d.has(n))return X;P.delete(n)}d.delete(n);return F(d)}))},keys:()=>$(N).then((n)=>n===null?[]:Array.from(n.keys()))};window.omelette={writeFile:(n,d)=>H(n,d).then((p)=>{if(!p.persisted&&!p.noHost){throw new Error(p.reason||"write failed")}}),storage:ee};if(A&&A!==window){const n=(e,t)=>{try{A.postMessage({__omelette_log:true,type:e,data:t},"*")}catch{}};["log","warn","error"].forEach((e)=>{const t=console[e];console[e]=(...a)=>{const u=a.map((s)=>{try{return typeof s==="object"?JSON.stringify(s):String(s)}catch{try{return String(s)}catch{return"[unstringifiable]"}}}).join(" ");n(e,u);t.apply(console,a)}});window.addEventListener("error",(e)=>{const t=e.target;if(t&&t!==window&&t.tagName){const a=t.src||t.href||"";n("resource_error",`${t.tagName} failed to load: ${a}`)}else{n("error",`${e.message||"Unknown error"} at ${e.filename||"?"}:${e.lineno||0}:${e.colno||0}`)}},true);window.addEventListener("unhandledrejection",(e)=>{const t=e.reason;const a=t instanceof Error?`${t.message} ${t.stack}`:String(t);n("error",`Unhandled rejection: ${a}`)});window.addEventListener("click",(e)=>{if(e.defaultPrevented||e.button!==0)return;if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;const t=e.composedPath?e.composedPath():[];const a=["button","input","select","textarea","summary","label"];let u=null;for(const v of t){if(!(v instanceof Element))continue;if(v.localName==="a"){if(!(v instanceof HTMLAnchorElement))return;u=v;break}if(a.indexOf(v.localName)!==-1)return}if(!u)return;if(u.isContentEditable)return;const s=u.closest("[contenteditable]");if(s&&s.getAttribute("contenteditable")!=="false")return;const S=(u.getAttribute("target")||"_self").toLowerCase();if(S!=="_self"&&S!=="_top"&&S!=="_parent")return;let _;try{_=new URL(u.href)}catch{return}if(_.protocol!=="http:"&&_.protocol!=="https:")return;if(location.origin==="null")return;if(_.origin===location.origin)return;e.preventDefault();window.open(_.href,"_blank","noopener,noreferrer")});const d=()=>{try{A.postMessage({type:"omelette:height",height:document.documentElement.scrollHeight},"*")}catch{}};if(window.ResizeObserver)new ResizeObserver(d).observe(document.documentElement);const p=()=>{d();if(!document.querySelector('script[type="text/babel"],script[type="text/jsx"]'))return;const e=()=>document.getElementById("root")||document.querySelector("body > div[id]");const t=e()?.firstElementChild??null;let a=0;const u=()=>{const s=e();if(s&&s.firstElementChild!==t||++a>30){d();return}setTimeout(u,100)};setTimeout(u,100)};if(document.readyState==="complete")p();else window.addEventListener("load",p);const f={};let g=0;const h=(e)=>new Promise((t,a)=>{if(!I.length){a(new Error("claude.complete: no parent origin"));return}const u=`c${++g}`;const s=()=>setTimeout(()=>{delete f[u];a(new Error(`claude.complete: no data for ${J/1000}s`))},J);const S=s();f[u]={resolve:t,reject:a,text:"",t:S,arm:s};try{for(const _ of I){A.postMessage({__om_api:true,id:u,body:e},_)}}catch(_){clearTimeout(S);delete f[u];a(_)}});const y=8;const m=async(e,t)=>{if(!Array.isArray(e.messages)){throw new Error("claude.complete: tools require a messages array")}const a=e.messages.slice();const u={...e,tools:e.tools.map((_)=>{if(_===null||typeof _!=="object")return _;const v={};for(const o of Object.keys(_)){if(typeof _[o]!=="function")v[o]=_[o]}return v})};const s=u.tool_choice;const S=s!=null&&(s.type==="any"||s.type==="tool")?{...u,tool_choice:s.disable_parallel_tool_use!==undefined?{type:"auto",disable_parallel_tool_use:s.disable_parallel_tool_use}:{type:"auto"}}:u;for(let _=0;_<y;_++){const v=await h({..._===0?u:S,messages:a});const o=v.message;const r=o&&Array.isArray(o.content)?o.content:null;const l=r?r.filter((c)=>c?.type==="tool_use"):[];if(o?.stop_reason!=="tool_use"||l.length===0){return v.text}const i=[];for(const c of l){const k=t.get(c.name);if(!k){i.push({type:"tool_result",tool_use_id:c.id,content:`no handler for tool "${c.name}"`,is_error:true});continue}try{const b=await k(c.input);const E=typeof b==="string"?b:O(b)??"";i.push({type:"tool_result",tool_use_id:c.id,content:E})}catch(b){i.push({type:"tool_result",tool_use_id:c.id,content:String(b?.message??b??"tool handler failed"),is_error:true})}}a.push({role:"assistant",content:r},{role:"user",content:i})}throw new Error(`claude.complete: exceeded ${y} tool turns`)};window.claude={complete(e){const t=e;if(t!==null&&typeof t==="object"&&Array.isArray(t.tools)&&t.tools.some((a)=>a!==null&&typeof a==="object"&&typeof a.run==="function")){const a=new Map;for(const u of t.tools){if(u!==null&&typeof u==="object"&&typeof u.run==="function"){a.set(String(u.name),u.run)}}return m(t,a)}return h(e).then((a)=>a.text)}};const w={};let R=0;H=(e,t)=>new Promise((a)=>{if(!I.length){a({persisted:false,noHost:true,reason:U});return}const u=`f${++R}`;const s=setTimeout(()=>{delete w[u];a({persisted:false,noHost:true,reason:U})},G);w[u]={settle:a,t:s};try{for(const S of I){A.postMessage({__om_file:true,id:u,op:"write",path:e,content:t},S)}}catch{clearTimeout(s);delete w[u];a({persisted:false,noHost:true,reason:U})}});const O=(e)=>{try{return JSON.stringify(e)}catch{return JSON.stringify(String(e))}};window.addEventListener("message",(e)=>{if(I.indexOf(e.origin)<0)return;if(e.source!==A)return;const t=e.data;if(!t)return;if(t.type==="omelette-preview-refresh"){if(typeof t.token!=="string"||!/^[0-9a-f.-]+(\.(rc|pr-[0-9]+))?(\.[0-9]+\.[0-9a-f]{16})?$/.test(t.token))return;const s=Math.max(1,Math.floor((t.expiresAt||0)-Date.now()/1000));document.cookie="__Host-omelette-preview="+t.token+"; Path=/; Secure; SameSite=None; Partitioned; Max-Age="+s;C();return}if(t.__om_file_r){const s=w[t.id];if(!s)return;clearTimeout(s.t);delete w[t.id];s.settle(t.ok?{persisted:true}:{persisted:false,reason:t.error||"write failed"});return}if(t.__om_api_r){const s=f[t.id];if(!s)return;if(t.error!=null){clearTimeout(s.t);delete f[t.id];s.reject(new Error(t.error));return}if(t.chunk!=null){clearTimeout(s.t);s.t=s.arm();s.text+=t.chunk;return}if(t.done){clearTimeout(s.t);delete f[t.id];s.resolve({text:t.text!=null?t.text:s.text,message:t.message});return}return}if(!t.__om_eval)return;const a=t;const u=(s)=>{e.source.postMessage({...s,__om_eval_r:1,id:a.id},e.origin)};try{const s=(0,eval)(a.code);if(s&&typeof s.then==="function"){s.then((S)=>u({ok:1,v:O(S)}),(S)=>u({ok:0,e:String(S)}))}else{u({ok:1,v:O(s)})}}catch(s){u({ok:0,e:String(s)})}})}})();
+</script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F6FA}
+a{color:#364484}a:hover{color:#242E69}
+input::placeholder{color:#A3ABC2}
+[data-theme="dark"]{--page:#0E1024;--card:#13192E;--ink:#F4F6FA;--muted:#A3ABC2;--line:#26304A;--head:#1A2138;--barline:#26304A}
+</style>
+</helmet>
+<div dir="rtl" data-theme="{{ theme }}" style="position:relative;width:100%;min-width:1280px;max-width:1440px;height:900px;overflow:hidden;box-sizing:border-box;background:var(--page,#F4F6FA);color:var(--ink,#1F2540);font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;font-size:15px;line-height:1.5;display:flex;flex-direction:column">
+
+<sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;inset:0;background:#0E1024;display:flex;align-items:center;justify-content:center;overflow:hidden">
+<svg viewBox="0 0 1440 900" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" aria-hidden="true">
+<path d="M-20 560C220 500 400 660 720 600S1200 520 1460 600" style="fill:none;stroke:#5265AC;stroke-width:1.5;opacity:.22"></path>
+<path d="M-20 610C220 550 400 710 720 650S1200 570 1460 650" style="fill:none;stroke:#5265AC;stroke-width:1.5;opacity:.18"></path>
+<path d="M-20 660C220 600 400 760 720 700S1200 620 1460 700" style="fill:none;stroke:#449686;stroke-width:1.5;opacity:.16"></path>
+<path d="M-20 710C220 650 400 810 720 750S1200 670 1460 750" style="fill:none;stroke:#449686;stroke-width:1.5;opacity:.12"></path>
+<path d="M-20 760C220 700 400 860 720 800S1200 720 1460 800" style="fill:none;stroke:#5265AC;stroke-width:1.5;opacity:.1"></path>
+<path d="M-20 810C220 750 400 910 720 850S1200 770 1460 850" style="fill:none;stroke:#5265AC;stroke-width:1.5;opacity:.08"></path>
+</svg>
+<div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;width:400px">
+<svg viewBox="0 0 100 100" width="64" height="64" aria-hidden="true"><defs><linearGradient id="sf-gi" x1="0.5" y1="0" x2="0.9" y2="0.75"><stop offset="0" style="stop-color:#5265AC"></stop><stop offset="1" style="stop-color:#242E69"></stop></linearGradient><linearGradient id="sf-gg" x1="0.5" y1="1" x2="0.1" y2="0.3"><stop offset="0" style="stop-color:#449686"></stop><stop offset="1" style="stop-color:#286E66"></stop></linearGradient></defs><path d="M10.2 27L50 4L89.8 27L89.8 73Z" fill="url(#sf-gi)"></path><path d="M10.2 27L89.8 73L50 96L10.2 73Z" fill="url(#sf-gg)"></path><path d="M10.2 27L89.8 73" style="fill:none;stroke:#0E1024;stroke-width:5"></path></svg>
+<div dir="ltr" style="color:#fff;font-size:24px;font-weight:600;letter-spacing:.02em;line-height:1;margin-bottom:18px">StaffFlow</div>
+<form onSubmit="{{ doLogin }}" style="width:100%;box-sizing:border-box;background:#fff;border-radius:8px;padding:32px;display:flex;flex-direction:column;gap:16px;box-shadow:0 8px 32px rgba(0,0,0,.35)">
+<div style="font-size:18px;font-weight:600;margin-bottom:4px">تسجيل الدخول</div>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500;color:#5B6480">اسم المستخدم</span><input type="text" value="{{ loginUser }}" onChange="{{ setLoginUser }}" style="height:40px;padding:0 12px;border:1px solid #D9DFEA;border-radius:4px;background:#fff;color:#1F2540;font:inherit;font-size:15px;width:100%;box-sizing:border-box" style-focus="outline:2px solid #5265AC;outline-offset:1px"></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500;color:#5B6480">كلمة المرور</span><input type="password" value="{{ loginPass }}" onChange="{{ setLoginPass }}" style="height:40px;padding:0 12px;border:1px solid #D9DFEA;border-radius:4px;background:#fff;color:#1F2540;font:inherit;font-size:15px;width:100%;box-sizing:border-box" style-focus="outline:2px solid #5265AC;outline-offset:1px"></label>
+<sc-if value="{{ loginError }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#242E69;background:#EEF0F8;border-radius:4px;padding:8px 10px"><span style="flex:none;width:16px;height:16px;border-radius:50%;background:#364484;color:#fff;font-size:11px;display:inline-flex;align-items:center;justify-content:center">!</span><span>اسم المستخدم أو كلمة المرور غير صحيحة</span></div></sc-if>
+<button type="submit" style="height:44px;border:0;border-radius:8px;background:#364484;color:#fff;font:inherit;font-size:15px;font-weight:600;cursor:pointer;margin-top:4px" style-hover="background:#242E69">دخول</button>
+</form>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ hasBar }}" hint-placeholder-val="{{ false }}">
+<div style="height:56px;flex:none;background:#0E1024;display:flex;align-items:center;padding:0 32px;gap:28px;border-bottom:1px solid var(--barline,#0E1024);box-sizing:border-box">
+<div style="display:flex;align-items:center;gap:10px"><svg viewBox="0 0 100 100" width="28" height="28" aria-hidden="true"><path d="M10.2 27L50 4L89.8 27L89.8 73Z" fill="url(#sf-gi)"></path><path d="M10.2 27L89.8 73L50 96L10.2 73Z" fill="url(#sf-gg)"></path><path d="M10.2 27L89.8 73" style="fill:none;stroke:#0E1024;stroke-width:5"></path></svg><span dir="ltr" style="color:#fff;font-size:18px;font-weight:600;letter-spacing:.02em">StaffFlow</span></div>
+<nav style="display:flex;gap:4px;height:56px">
+<sc-for list="{{ nav }}" as="n" hint-placeholder-count="2"><button onClick="{{ n.go }}" style="background:none;border:0;color:#fff;font:inherit;font-size:15px;font-weight:500;padding:0 12px;height:56px;border-bottom:3px solid {{ n.underline }};box-sizing:border-box;cursor:pointer;opacity:{{ n.opacity }}" style-hover="background:#13192E">{{ n.label }}</button></sc-for>
+</nav>
+<div style="margin-inline-start:auto;display:flex;align-items:center;gap:20px">
+<div style="display:flex;align-items:center;gap:8px;color:#A3ABC2;font-size:13px"><sc-if value="{{ demoMode }}" hint-placeholder-val="{{ false }}"><span style="border:1px solid #26304A;border-radius:4px;padding:1px 6px">وضع العرض التجريبي</span></sc-if><span dir="ltr" style="font-variant-numeric:tabular-nums;color:#fff;font-size:15px">{{ clock }}</span></div>
+<div style="display:flex;flex-direction:column;align-items:flex-start;line-height:1.2"><span style="color:#fff;font-weight:500">{{ userName }}</span><span style="color:#A3ABC2;font-size:12px">{{ userRole }}</span></div>
+<button onClick="{{ logout }}" style="background:none;border:0;color:#A3ABC2;font:inherit;font-size:13px;cursor:pointer;padding:0" style-hover="color:#fff">تسجيل الخروج</button>
+<div style="display:flex;gap:2px;border:1px dashed #5265AC;border-radius:8px;padding:2px">
+<sc-for list="{{ roles }}" as="r" hint-placeholder-count="3"><button onClick="{{ r.go }}" style="border:0;border-radius:6px;font:inherit;font-size:12px;font-weight:500;padding:4px 8px;cursor:pointer;background:{{ r.bg }};color:{{ r.fg }}">{{ r.label }}</button></sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ is403 }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:32px">
+<div style="font-size:24px;font-weight:600">غير مصرح لك بالوصول إلى هذه الصفحة</div>
+<button onClick="{{ goHome }}" style="height:40px;padding:0 20px;border:1px solid #D9DFEA;border-radius:8px;background:#fff;color:#1F2540;font:inherit;font-size:15px;font-weight:500;cursor:pointer" style-hover="border-color:#5265AC">الرئيسية</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ sHome }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;display:flex;justify-content:center;padding:48px 32px;overflow:auto">
+<div style="width:720px;display:flex;flex-direction:column;gap:24px">
+<div style="position:relative;overflow:hidden;background:{{ me.tint }};border:1px solid #D9DFEA;border-radius:8px;padding:32px 36px 32px 32px;min-height:200px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:16px">
+<div style="position:absolute;top:0;bottom:0;right:0;width:4px;background:{{ me.stripe }}"></div>
+<sc-if value="{{ me.onFloor }}" hint-placeholder-val="{{ true }}"><div style="font-size:32px;font-weight:600;line-height:1.2">متواجد</div></sc-if>
+<sc-if value="{{ me.onBreak }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;align-items:center;gap:12px"><span style="display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:4px;font-size:13px;font-weight:600;color:#fff;background:{{ me.stripe }}">{{ me.statusLabel }}</span><span style="font-size:24px;font-weight:600">{{ me.breakLabel }}</span></div>
+<div dir="ltr" style="align-self:flex-end;font-size:48px;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums">{{ me.timer }}</div>
+<sc-if value="{{ me.showBar }}" hint-placeholder-val="{{ false }}"><div style="height:6px;border-radius:3px;background:rgba(31,37,64,.08);overflow:hidden"><div style="height:100%;width:{{ me.pct }}%;background:{{ me.stripe }}"></div></div></sc-if>
+<button onClick="{{ endBreak }}" style="align-self:flex-start;height:48px;padding:0 28px;border:0;border-radius:8px;background:#364484;color:#fff;font:inherit;font-size:18px;font-weight:600;cursor:pointer" style-hover="background:#242E69">عودة إلى العمل</button>
+</sc-if>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+<sc-for list="{{ breakButtons }}" as="b" hint-placeholder-count="4"><button onClick="{{ b.start }}" disabled="{{ b.disabled }}" style="height:112px;background:#fff;border:1px solid #D9DFEA;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font:inherit;padding:0;color:{{ b.color }};cursor:{{ b.cursor }}" style-hover="border-color:#5265AC"><span style="font-size:18px;font-weight:600">{{ b.label }}</span><sc-if value="{{ b.hasSub }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:#5B6480">{{ b.sub }}</span></sc-if></button></sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ sBoard }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;min-height:0;display:flex;flex-direction:column;gap:16px;padding:24px 32px;box-sizing:border-box">
+<div style="flex:none;display:flex;align-items:center;gap:28px;background:var(--card,#fff);border:1px solid var(--line,#D9DFEA);border-radius:8px;padding:0 20px;height:72px;box-sizing:border-box;position:relative">
+<h1 style="margin:0 8px 0 0;font-size:24px;font-weight:600;white-space:nowrap">اللوحة الحية</h1>
+<sc-for list="{{ pools }}" as="p" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:10px;white-space:nowrap"><span style="font-weight:500">{{ p.label }}</span><span style="display:flex;gap:3px"><sc-for list="{{ p.segs }}" as="s" hint-placeholder-count="2"><span style="width:26px;height:10px;border-radius:2px;background:{{ s.bg }}"></span></sc-for></span><span dir="ltr" style="font-size:18px;font-weight:600;font-variant-numeric:tabular-nums">{{ p.count }}</span></div></sc-for>
+<sc-if value="{{ showCap }}" hint-placeholder-val="{{ false }}">
+<div style="margin-inline-start:auto;display:flex;align-items:center;gap:12px;position:relative;white-space:nowrap">
+<span style="color:var(--muted,#5B6480)">الحد الأقصى للمجموعة العامة</span>
+<div style="display:flex;gap:2px;border:1px solid var(--line,#D9DFEA);border-radius:8px;padding:2px;background:var(--card,#fff)"><sc-for list="{{ capOpts }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.select }}" style="width:40px;height:32px;border:0;border-radius:6px;font:inherit;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;cursor:pointer;background:{{ c.bg }};color:{{ c.fg }}">{{ c.n }}</button></sc-for></div>
+<sc-if value="{{ capConfirm }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;top:calc(100% + 12px);left:0;width:300px;background:#fff;color:#1F2540;border:1px solid #D9DFEA;border-radius:8px;box-shadow:0 8px 24px rgba(14,16,36,.16);padding:16px;display:flex;flex-direction:column;gap:12px;z-index:10;white-space:normal">
+<div style="font-size:13px;color:#5B6480">الحد الأقصى للمجموعة العامة</div>
+<div style="font-size:18px;font-weight:600">من <span dir="ltr">{{ capFrom }}</span> إلى <span dir="ltr">{{ capTo }}</span></div>
+<div style="display:flex;gap:8px"><button onClick="{{ confirmCap }}" style="height:36px;padding:0 18px;border:0;border-radius:8px;background:#364484;color:#fff;font:inherit;font-size:15px;font-weight:600;cursor:pointer" style-hover="background:#242E69">حفظ</button><button onClick="{{ cancelCap }}" style="height:36px;padding:0 14px;border:1px solid #D9DFEA;border-radius:8px;background:#fff;color:#1F2540;font:inherit;font-size:15px;font-weight:500;cursor:pointer" style-hover="border-color:#5265AC">إلغاء</button></div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+</div>
+<div style="flex:1;min-height:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:16px">
+<sc-for list="{{ tiles }}" as="t" hint-placeholder-count="12">
+<sc-if value="{{ layoutA }}" hint-placeholder-val="{{ true }}">
+<div onClick="{{ t.open }}" style="position:relative;overflow:hidden;background:{{ t.tint }};border:1px solid var(--line,#D9DFEA);border-radius:8px;padding:14px 20px 12px 16px;display:flex;flex-direction:column;gap:6px;min-height:0;box-sizing:border-box;cursor:{{ t.cursor }}">
+<div style="position:absolute;top:0;bottom:0;right:0;width:4px;background:{{ t.stripe }}"></div>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="font-size:18px;font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.name }}</span><span style="flex:none;display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:4px;font-size:13px;font-weight:600;white-space:nowrap;color:{{ t.chipFg }};background:{{ t.stripe }}">{{ t.statusLabel }}</span></div>
+<div style="flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:2px">
+<sc-if value="{{ t.hasBreak }}" hint-placeholder-val="{{ false }}"><span style="color:var(--muted,#5B6480)">{{ t.breakLabel }}</span><span dir="ltr" style="align-self:flex-end;font-size:24px;font-weight:600;line-height:1.2;font-variant-numeric:tabular-nums">{{ t.timer }}</span></sc-if>
+<sc-if value="{{ t.hasNote }}" hint-placeholder-val="{{ false }}"><span style="color:var(--muted,#5B6480)">{{ t.note }}</span></sc-if>
+<sc-if value="{{ t.hasFlags }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"><sc-for list="{{ t.flags }}" as="f" hint-placeholder-count="1"><span style="display:inline-flex;align-items:center;height:22px;padding:0 6px;border-radius:4px;font-size:12px;font-weight:500;border:1px solid var(--line,#D9DFEA);color:var(--muted,#5B6480);background:var(--card,#fff)">{{ f.label }}</span></sc-for></div></sc-if>
+</div>
+<div style="display:flex;flex-direction:column;gap:0;font-size:13px;color:var(--muted,#5B6480)">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><span>الرصيد المستخدم</span><span dir="ltr" style="font-size:15px;font-weight:600;color:var(--ink,#1F2540);font-variant-numeric:tabular-nums">{{ t.budget }}</span></div>
+<div style="font-variant-numeric:tabular-nums">{{ t.counters }}</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ layoutB }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ t.open }}" style="position:relative;overflow:hidden;background:var(--card,#fff);border:1px solid var(--line,#D9DFEA);border-radius:8px;display:flex;flex-direction:column;min-height:0;cursor:{{ t.cursor }}">
+<div style="flex:none;height:40px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 16px;color:{{ t.chipFg }};background:{{ t.stripe }}"><span style="font-size:18px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.name }}</span><span style="flex:none;font-size:13px;font-weight:600">{{ t.statusLabel }}</span></div>
+<div style="flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:0;padding:6px 16px">
+<sc-if value="{{ t.hasBreak }}" hint-placeholder-val="{{ false }}"><span dir="ltr" style="align-self:flex-end;font-size:32px;font-weight:600;line-height:1.15;font-variant-numeric:tabular-nums">{{ t.timer }}</span><span style="color:var(--muted,#5B6480)">{{ t.breakLabel }}</span></sc-if>
+<sc-if value="{{ t.hasNote }}" hint-placeholder-val="{{ false }}"><span style="color:var(--muted,#5B6480)">{{ t.note }}</span></sc-if>
+<sc-if value="{{ t.hasFlags }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"><sc-for list="{{ t.flags }}" as="f" hint-placeholder-count="1"><span style="display:inline-flex;align-items:center;height:22px;padding:0 6px;border-radius:4px;font-size:12px;font-weight:500;border:1px solid var(--line,#D9DFEA);color:var(--muted,#5B6480)">{{ f.label }}</span></sc-for></div></sc-if>
+</div>
+<div style="flex:none;padding:0 16px 12px;display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;gap:2px"><sc-for list="{{ t.ticks }}" as="k" hint-placeholder-count="25"><span style="flex:1;height:8px;border-radius:1px;background:{{ k.bg }}"></span></sc-for></div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--muted,#5B6480)"><span style="font-variant-numeric:tabular-nums">{{ t.counters }}</span><span dir="ltr" style="font-size:15px;font-weight:600;color:var(--ink,#1F2540);font-variant-numeric:tabular-nums">{{ t.budget }}</span></div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ layoutC }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ t.open }}" style="position:relative;overflow:hidden;background:var(--card,#fff);border:1px solid var(--line,#D9DFEA);border-radius:8px;padding:14px 22px 12px 16px;display:flex;flex-direction:column;gap:6px;min-height:0;box-sizing:border-box;cursor:{{ t.cursor }}">
+<div style="position:absolute;top:0;bottom:0;right:0;width:6px;background:{{ t.stripe }}"></div>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="font-size:18px;font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.name }}</span><span style="flex:none;display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:4px;font-size:13px;font-weight:600;white-space:nowrap;border:1px solid {{ t.stripe }};color:{{ t.stripe }}">{{ t.statusLabel }}</span></div>
+<div style="flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:2px">
+<sc-if value="{{ t.hasBreak }}" hint-placeholder-val="{{ false }}"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><span style="color:var(--muted,#5B6480)">{{ t.breakLabel }}</span><span dir="ltr" style="font-size:24px;font-weight:600;line-height:1.2;font-variant-numeric:tabular-nums">{{ t.timer }}</span></div></sc-if>
+<sc-if value="{{ t.hasNote }}" hint-placeholder-val="{{ false }}"><span style="color:var(--muted,#5B6480)">{{ t.note }}</span></sc-if>
+<sc-if value="{{ t.hasFlags }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"><sc-for list="{{ t.flags }}" as="f" hint-placeholder-count="1"><span style="display:inline-flex;align-items:center;height:22px;padding:0 6px;border-radius:4px;font-size:12px;font-weight:500;border:1px solid var(--line,#D9DFEA);color:var(--muted,#5B6480)">{{ f.label }}</span></sc-for></div></sc-if>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="height:4px;border-radius:2px;background:var(--head,#E9EDF4);overflow:hidden"><div style="height:100%;width:{{ t.pct }}%;background:#364484"></div></div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--muted,#5B6480)"><span style="font-variant-numeric:tabular-nums">{{ t.counters }}</span><span dir="ltr" style="font-weight:600;color:var(--ink,#1F2540);font-variant-numeric:tabular-nums">{{ t.budget }}</span></div>
+</div>
+</div>
+</sc-if>
+</sc-for>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ sLeave }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;min-height:0;padding:24px 32px;display:flex;flex-direction:column;gap:16px;overflow:auto;box-sizing:border-box">
+<h1 style="margin:0;font-size:24px;font-weight:600">الإجازات</h1>
+<div style="display:grid;grid-template-columns:440px minmax(0,1fr);gap:24px;align-items:start">
+<div style="display:flex;flex-direction:column;gap:16px">
+<div style="background:#fff;border:1px solid #D9DFEA;border-radius:8px;padding:20px 24px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:500;color:#5B6480">الرصيد المتبقي</span><span style="font-size:32px;font-weight:600;line-height:1.2;font-variant-numeric:tabular-nums"><span dir="ltr">{{ myBalance }}</span> يوم</span></div>
+<form onSubmit="{{ submitLeave }}" style="background:#fff;border:1px solid #D9DFEA;border-radius:8px;padding:20px 24px;display:flex;flex-direction:column;gap:16px">
+<div style="font-size:18px;font-weight:600">طلب جديد</div>
+<div style="display:flex;gap:2px;border:1px solid #D9DFEA;border-radius:8px;padding:2px;align-self:flex-start"><button type="button" onClick="{{ setKindHourly }}" style="height:32px;padding:0 16px;border:0;border-radius:6px;font:inherit;font-size:15px;font-weight:500;cursor:pointer;background:{{ hourlyBg }};color:{{ hourlyFg }}">إجازة ساعية</button><button type="button" onClick="{{ setKindDaily }}" style="height:32px;padding:0 16px;border:0;border-radius:6px;font:inherit;font-size:15px;font-weight:500;cursor:pointer;background:{{ dailyBg }};color:{{ dailyFg }}">إجازة يومية</button></div>
+<sc-if value="{{ lfHourly }}" hint-placeholder-val="{{ true }}">
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500;color:#5B6480">التاريخ</span><input type="text" dir="ltr" placeholder="09/09/2026" value="{{ lfDate }}" onChange="{{ setLfDate }}" style="height:40px;padding:0 12px;border:1px solid {{ lfBorder }};border-radius:4px;background:#fff;color:#1F2540;font:inherit;font-size:15px;width:100%;box-sizing:border-box;font-variant-numeric:tabular-nums;text-align:right" style-focus="outline:2px solid #5265AC;outline-offset:1px"></label>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500;color:#5B6480">من</span><input type="time" lang="en-GB" dir="ltr" value="{{ lfFrom }}" onChange="{{ setLfFrom }}" style="height:40px;padding:0 12px;border:1px solid {{ lfBorder }};border-radius:4px;background:#fff;color:#1F2540;font:inherit;font-size:15px;width:100%;box-sizing:border-box" style-focus="outline:2px solid #5265AC;outline-offset:1px"></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500;color:#5B6480">إلى</span><input type="time" lang="en-GB" dir="ltr" value="{{ lfTo }}" onChange="{{ setLfTo }}" style="height:40px;padding:0 12px;border:1px solid {{ lfBorder }};border-radius:4px;background:#fff;color:#1F2540;font:inherit;font-size:15px;width:100%;box-sizing:border-box" style-focus="outline:2px solid #5265AC;outline-offset:1px"></label>
+</div>
+</sc-if>
+<sc-if value="{{ lfDaily }}" hint-placeholder-val="{{ false }}">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500;color:#5B6480">من تاريخ</span><input type="text" dir="ltr" placeholder="09/09/2026" value="{{ lfStart }}" onChange="{{ setLfStart }}" style="height:40px;padding:0 12px;border:1px solid {{ lfBorder }};border-radius:4px;background:#fff;color:#1F2540;font:inherit;font-size:15px;width:100%;box-sizing:border-box;font-variant-numeric:tabular-nums;text-align:right" style-focus="outline:2px solid #5265AC;outline-offset:1px"></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500;color:#5B6480">إلى تاريخ</span><input type="text" dir="ltr" placeholder="09/09/2026" value="{{ lfEnd }}" onChange="{{ setLfEnd }}" style="height:40px;padding:0 12px;border:1px solid {{ lfBorder }};border-radius:4px;background:#fff;color:#1F2540;font:inherit;font-size:15px;width:100%;box-sizing:border-box;font-variant-numeric:tabular-nums;text-align:right" style-focus="outline:2px solid #5265AC;outline-offset:1px"></label>
+</div>
+</sc-if>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500;color:#5B6480">السبب</span><input type="text" value="{{ lfReason }}" onChange="{{ setLfReason }}" style="height:40px;padding:0 12px;border:1px solid {{ lfBorder }};border-radius:4px;background:#fff;color:#1F2540;font:inherit;font-size:15px;width:100%;box-sizing:border-box" style-focus="outline:2px solid #5265AC;outline-offset:1px"></label>
+<sc-if value="{{ lfHasError }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#242E69;background:#EEF0F8;border-radius:4px;padding:8px 10px"><span style="flex:none;width:16px;height:16px;border-radius:50%;background:#364484;color:#fff;font-size:11px;display:inline-flex;align-items:center;justify-content:center">!</span><span>{{ lfError }}</span></div></sc-if>
+<button type="submit" style="align-self:flex-start;height:40px;padding:0 24px;border:0;border-radius:8px;background:#364484;color:#fff;font:inherit;font-size:15px;font-weight:600;cursor:pointer" style-hover="background:#242E69">إرسال</button>
+</form>
+</div>
+<div style="background:#fff;border:1px solid #D9DFEA;border-radius:8px;overflow:hidden">
+<div style="font-size:18px;font-weight:600;padding:16px 20px 12px">طلباتي</div>
+<table style="width:100%;border-collapse:collapse">
+<thead><tr>
+<th style="text-align:start;padding:10px 20px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">التاريخ</th>
+<th style="text-align:start;padding:10px 16px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">الساعات</th>
+<th style="text-align:start;padding:10px 16px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">السبب</th>
+<th style="padding:10px 16px;background:#E9EDF4;border-bottom:1px solid #D9DFEA"></th>
+<th style="padding:10px 16px;background:#E9EDF4;border-bottom:1px solid #D9DFEA"></th>
+</tr></thead>
+<tbody>
+<sc-for list="{{ myRequests }}" as="r" hint-placeholder-count="4"><tr>
+<td style="padding:12px 20px;border-bottom:1px solid #D9DFEA;vertical-align:middle"><div style="font-weight:600">{{ r.kindLabel }}</div><div style="font-size:13px;color:#5B6480;font-variant-numeric:tabular-nums">{{ r.when }}</div></td>
+<td style="padding:12px 16px;border-bottom:1px solid #D9DFEA;vertical-align:middle;font-variant-numeric:tabular-nums">{{ r.hours }}</td>
+<td style="padding:12px 16px;border-bottom:1px solid #D9DFEA;vertical-align:middle;color:#5B6480">{{ r.reason }}</td>
+<td style="padding:12px 16px;border-bottom:1px solid #D9DFEA;vertical-align:middle"><span style="display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:4px;font-size:13px;font-weight:600;white-space:nowrap;background:{{ r.chipBg }};color:{{ r.chipFg }};border:1px solid {{ r.chipBd }}">{{ r.chipLabel }}</span></td>
+<td style="padding:12px 16px;border-bottom:1px solid #D9DFEA;vertical-align:middle;text-align:end"><sc-if value="{{ r.pending }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.cancel }}" style="height:32px;padding:0 12px;border:1px solid #D9DFEA;border-radius:8px;background:#fff;color:#1F2540;font:inherit;font-size:13px;font-weight:500;cursor:pointer" style-hover="border-color:#5265AC">إلغاء</button></sc-if></td>
+</tr></sc-for>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ sRequests }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;min-height:0;padding:24px 32px;display:flex;flex-direction:column;gap:16px;overflow:auto;box-sizing:border-box">
+<h1 style="margin:0;font-size:24px;font-weight:600">طلبات الإجازة</h1>
+<div style="background:#fff;border:1px solid #D9DFEA;border-radius:8px;overflow:hidden">
+<table style="width:100%;border-collapse:collapse">
+<thead><tr>
+<th style="text-align:start;padding:10px 20px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">مقدم الطلب</th>
+<th style="text-align:start;padding:10px 16px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">التاريخ</th>
+<th style="text-align:start;padding:10px 16px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">الساعات</th>
+<th style="text-align:start;padding:10px 16px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">السبب</th>
+<th style="padding:10px 16px;background:#E9EDF4;border-bottom:1px solid #D9DFEA"></th>
+<th style="text-align:start;padding:10px 20px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">الرصيد المتبقي</th>
+</tr></thead>
+<tbody><sc-for list="{{ allRequests }}" as="r" hint-placeholder-count="6"><tr>
+<td style="padding:12px 20px;border-bottom:1px solid #D9DFEA;font-weight:600">{{ r.agent }}</td>
+<td style="padding:12px 16px;border-bottom:1px solid #D9DFEA"><div>{{ r.kindLabel }}</div><div style="font-size:13px;color:#5B6480;font-variant-numeric:tabular-nums">{{ r.when }}</div></td>
+<td style="padding:12px 16px;border-bottom:1px solid #D9DFEA;font-variant-numeric:tabular-nums">{{ r.hours }}</td>
+<td style="padding:12px 16px;border-bottom:1px solid #D9DFEA;color:#5B6480">{{ r.reason }}</td>
+<td style="padding:12px 16px;border-bottom:1px solid #D9DFEA"><span style="display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:4px;font-size:13px;font-weight:600;white-space:nowrap;background:{{ r.chipBg }};color:{{ r.chipFg }};border:1px solid {{ r.chipBd }}">{{ r.chipLabel }}</span></td>
+<td style="padding:12px 20px;border-bottom:1px solid #D9DFEA;font-variant-numeric:tabular-nums"><span dir="ltr">{{ r.balance }}</span> يوم</td>
+</tr></sc-for></tbody>
+</table>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sDecisions }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;min-height:0;padding:24px 32px;display:flex;flex-direction:column;gap:16px;overflow:auto;box-sizing:border-box">
+<div style="display:flex;align-items:center;gap:24px"><h1 style="margin:0;font-size:24px;font-weight:600">قرارات الإجازة</h1>
+<div style="display:flex;gap:2px;border:1px solid #D9DFEA;border-radius:8px;padding:2px;background:#fff"><button onClick="{{ tabPending }}" style="height:32px;padding:0 14px;border:0;border-radius:6px;font:inherit;font-size:15px;font-weight:500;cursor:pointer;background:{{ tabPendingBg }};color:{{ tabPendingFg }}">قيد المراجعة <span dir="ltr" style="font-variant-numeric:tabular-nums">{{ pendingCount }}</span></button><button onClick="{{ tabApproved }}" style="height:32px;padding:0 14px;border:0;border-radius:6px;font:inherit;font-size:15px;font-weight:500;cursor:pointer;background:{{ tabApprovedBg }};color:{{ tabApprovedFg }}">مقبول <span dir="ltr" style="font-variant-numeric:tabular-nums">{{ approvedCount }}</span></button></div></div>
+<div style="background:#fff;border:1px solid #D9DFEA;border-radius:8px;overflow:hidden">
+<sc-if value="{{ decPendingView }}" hint-placeholder-val="{{ true }}">
+<sc-if value="{{ noPending }}" hint-placeholder-val="{{ false }}"><div style="padding:56px 24px;text-align:center;color:#5B6480">لا توجد طلبات قيد المراجعة</div></sc-if>
+<sc-if value="{{ hasPending }}" hint-placeholder-val="{{ true }}">
+<table style="width:100%;border-collapse:collapse">
+<thead><tr>
+<th style="text-align:start;padding:10px 20px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">مقدم الطلب</th>
+<th style="text-align:start;padding:10px 16px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">التاريخ</th>
+<th style="text-align:start;padding:10px 16px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">الساعات</th>
+<th style="text-align:start;padding:10px 16px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">السبب</th>
+<th style="text-align:start;padding:10px 16px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">الرصيد المتبقي</th>
+<th style="text-align:start;padding:10px 16px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA;width:260px">ملاحظة القرار (اختيارية)</th>
+<th style="padding:10px 20px;background:#E9EDF4;border-bottom:1px solid #D9DFEA"></th>
+</tr></thead>
+<tbody><sc-for list="{{ pendingRows }}" as="r" hint-placeholder-count="3"><tr>
+<td style="padding:12px 20px;border-bottom:1px solid #D9DFEA;font-weight:600">{{ r.agent }}</td>
+<td style="padding:12px 16px;border-bottom:1px solid #D9DFEA"><div>{{ r.kindLabel }}</div><div style="font-size:13px;color:#5B6480;font-variant-numeric:tabular-nums">{{ r.when }}</div></td>
+<td style="padding:12px 16px;border-bottom:1px solid #D9DFEA;font-variant-numeric:tabular-nums">{{ r.hours }}</td>
+<td style="padding:12px 16px;border-bottom:1px solid #D9DFEA;color:#5B6480">{{ r.reason }}</td>
+<td style="padding:12px 16px;border-bottom:1px solid #D9DFEA;font-variant-numeric:tabular-nums"><span dir="ltr">{{ r.balance }}</span> يوم</td>
+<td style="padding:12px 16px;border-bottom:1px solid #D9DFEA"><input type="text" value="{{ r.note }}" onChange="{{ r.setNote }}" placeholder="ملاحظة القرار (اختيارية)" style="height:36px;padding:0 12px;border:1px solid #D9DFEA;border-radius:4px;background:#fff;color:#1F2540;font:inherit;font-size:13px;width:100%;box-sizing:border-box" style-focus="outline:2px solid #5265AC;outline-offset:1px"></td>
+<td style="padding:12px 20px;border-bottom:1px solid #D9DFEA;white-space:nowrap;text-align:end"><div style="display:inline-flex;gap:8px"><button onClick="{{ r.approve }}" style="height:36px;padding:0 16px;border:0;border-radius:8px;background:#364484;color:#fff;font:inherit;font-size:15px;font-weight:600;cursor:pointer" style-hover="background:#242E69">موافقة</button><button onClick="{{ r.reject }}" style="height:36px;padding:0 14px;border:1px solid #D9DFEA;border-radius:8px;background:#fff;color:#1F2540;font:inherit;font-size:15px;font-weight:500;cursor:pointer" style-hover="border-color:#5265AC">رفض</button></div></td>
+</tr></sc-for></tbody>
+</table>
+</sc-if>
+</sc-if>
+<sc-if value="{{ decApprovedView }}" hint-placeholder-val="{{ false }}">
+<table style="width:100%;border-collapse:collapse">
+<thead><tr>
+<th style="text-align:start;padding:10px 20px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">مقدم الطلب</th>
+<th style="text-align:start;padding:10px 16px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">التاريخ</th>
+<th style="text-align:start;padding:10px 16px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">الساعات</th>
+<th style="text-align:start;padding:10px 16px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">السبب</th>
+<th style="text-align:start;padding:10px 16px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">ملاحظة القرار (اختيارية)</th>
+<th style="text-align:start;padding:10px 16px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">الرصيد المتبقي</th>
+<th style="padding:10px 20px;background:#E9EDF4;border-bottom:1px solid #D9DFEA"></th>
+</tr></thead>
+<tbody><sc-for list="{{ approvedRows }}" as="r" hint-placeholder-count="3"><tr>
+<td style="padding:12px 20px;border-bottom:1px solid #D9DFEA;font-weight:600">{{ r.agent }}</td>
+<td style="padding:12px 16px;border-bottom:1px solid #D9DFEA"><div>{{ r.kindLabel }}</div><div style="font-size:13px;color:#5B6480;font-variant-numeric:tabular-nums">{{ r.when }}</div></td>
+<td style="padding:12px 16px;border-bottom:1px solid #D9DFEA;font-variant-numeric:tabular-nums">{{ r.hours }}</td>
+<td style="padding:12px 16px;border-bottom:1px solid #D9DFEA;color:#5B6480">{{ r.reason }}</td>
+<td style="padding:12px 16px;border-bottom:1px solid #D9DFEA;color:#5B6480">{{ r.decisionNote }}</td>
+<td style="padding:12px 16px;border-bottom:1px solid #D9DFEA;font-variant-numeric:tabular-nums"><span dir="ltr">{{ r.balance }}</span> يوم</td>
+<td style="padding:12px 20px;border-bottom:1px solid #D9DFEA;text-align:end"><button onClick="{{ r.revoke }}" style="height:36px;padding:0 14px;border:1px solid #D9DFEA;border-radius:8px;background:#fff;color:#1F2540;font:inherit;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap" style-hover="border-color:#5265AC">سحب الموافقة</button></td>
+</tr></sc-for></tbody>
+</table>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sSummary }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;min-height:0;padding:24px 32px;display:flex;flex-direction:column;gap:16px;overflow:auto;box-sizing:border-box">
+<div style="display:flex;align-items:center;gap:20px"><h1 style="margin:0;font-size:24px;font-weight:600">الملخص اليومي</h1>
+<label style="display:flex;align-items:center;gap:8px"><span style="font-size:13px;font-weight:500;color:#5B6480">التاريخ</span><input type="text" dir="ltr" value="{{ summaryDate }}" onChange="{{ setSummaryDate }}" style="height:36px;width:130px;padding:0 12px;border:1px solid #D9DFEA;border-radius:4px;background:#fff;color:#1F2540;font:inherit;font-size:15px;font-variant-numeric:tabular-nums;text-align:center" style-focus="outline:2px solid #5265AC;outline-offset:1px"></label>
+<button onClick="{{ exportCsv }}" style="margin-inline-start:auto;height:40px;padding:0 20px;border:1px solid #D9DFEA;border-radius:8px;background:#fff;color:#1F2540;font:inherit;font-size:15px;font-weight:500;cursor:pointer" style-hover="border-color:#5265AC">تصدير CSV</button></div>
+<div style="background:#fff;border:1px solid #D9DFEA;border-radius:8px;overflow:hidden">
+<table style="width:100%;border-collapse:collapse">
+<thead><tr>
+<th style="text-align:start;padding:10px 20px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">الموظف</th>
+<th style="text-align:start;padding:10px 12px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">الرصيد المستخدم</th>
+<th style="text-align:start;padding:10px 12px;font-size:13px;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA;border-right:1px solid #D9DFEA"><div style="font-weight:600">تدخين</div><div style="font-weight:400">العدد</div></th>
+<th style="text-align:start;padding:10px 12px;font-size:13px;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA"><div style="font-weight:600">تدخين</div><div style="font-weight:400">الدقائق</div></th>
+<th style="text-align:start;padding:10px 12px;font-size:13px;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA;border-right:1px solid #D9DFEA"><div style="font-weight:600">صلاة</div><div style="font-weight:400">العدد</div></th>
+<th style="text-align:start;padding:10px 12px;font-size:13px;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA"><div style="font-weight:600">صلاة</div><div style="font-weight:400">الدقائق</div></th>
+<th style="text-align:start;padding:10px 12px;font-size:13px;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA;border-right:1px solid #D9DFEA"><div style="font-weight:600">طعام</div><div style="font-weight:400">العدد</div></th>
+<th style="text-align:start;padding:10px 12px;font-size:13px;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA"><div style="font-weight:600">طعام</div><div style="font-weight:400">الدقائق</div></th>
+<th style="text-align:start;padding:10px 12px;font-size:13px;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA;border-right:1px solid #D9DFEA"><div style="font-weight:600">دورة مياه</div><div style="font-weight:400">العدد</div></th>
+<th style="text-align:start;padding:10px 12px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA;border-right:1px solid #D9DFEA;vertical-align:top">التجاوزات</th>
+<th style="text-align:start;padding:10px 12px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA;vertical-align:top">إنهاء تلقائي</th>
+<th style="text-align:start;padding:10px 12px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA;vertical-align:top">معدّل</th>
+<th style="text-align:start;padding:10px 12px;font-size:13px;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA;border-right:1px solid #D9DFEA"><div style="font-weight:600">الإجازة</div><div style="font-weight:400">الساعات</div></th>
+<th style="text-align:start;padding:10px 20px 10px 12px;font-size:13px;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA"><div style="font-weight:600">الإجازة</div><div style="font-weight:400">يوم</div></th>
+</tr></thead>
+<tbody><sc-for list="{{ summaryRows }}" as="r" hint-placeholder-count="12"><tr>
+<td style="padding:11px 20px;border-bottom:1px solid #D9DFEA;font-weight:600;white-space:nowrap">{{ r.name }}</td>
+<td dir="ltr" style="padding:11px 12px;border-bottom:1px solid #D9DFEA;font-variant-numeric:tabular-nums;text-align:right;font-weight:600">{{ r.budget }}</td>
+<td style="padding:11px 12px;border-bottom:1px solid #D9DFEA;font-variant-numeric:tabular-nums;border-right:1px solid #D9DFEA">{{ r.smokeN }}</td>
+<td style="padding:11px 12px;border-bottom:1px solid #D9DFEA;font-variant-numeric:tabular-nums">{{ r.smokeMin }}</td>
+<td style="padding:11px 12px;border-bottom:1px solid #D9DFEA;font-variant-numeric:tabular-nums;border-right:1px solid #D9DFEA">{{ r.prayerN }}</td>
+<td style="padding:11px 12px;border-bottom:1px solid #D9DFEA;font-variant-numeric:tabular-nums">{{ r.prayerMin }}</td>
+<td style="padding:11px 12px;border-bottom:1px solid #D9DFEA;font-variant-numeric:tabular-nums;border-right:1px solid #D9DFEA">{{ r.mealN }}</td>
+<td style="padding:11px 12px;border-bottom:1px solid #D9DFEA;font-variant-numeric:tabular-nums">{{ r.mealMin }}</td>
+<td style="padding:11px 12px;border-bottom:1px solid #D9DFEA;font-variant-numeric:tabular-nums;border-right:1px solid #D9DFEA">{{ r.toiletN }}</td>
+<td style="padding:11px 12px;border-bottom:1px solid #D9DFEA;font-variant-numeric:tabular-nums;border-right:1px solid #D9DFEA">{{ r.overruns }}</td>
+<td style="padding:11px 12px;border-bottom:1px solid #D9DFEA;font-variant-numeric:tabular-nums">{{ r.auto }}</td>
+<td style="padding:11px 12px;border-bottom:1px solid #D9DFEA;font-variant-numeric:tabular-nums">{{ r.edited }}</td>
+<td style="padding:11px 12px;border-bottom:1px solid #D9DFEA;font-variant-numeric:tabular-nums;border-right:1px solid #D9DFEA">{{ r.leaveH }}</td>
+<td style="padding:11px 20px 11px 12px;border-bottom:1px solid #D9DFEA;font-variant-numeric:tabular-nums">{{ r.leaveD }}</td>
+</tr></sc-for></tbody>
+</table>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sBalances }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;min-height:0;padding:24px 32px;display:flex;flex-direction:column;gap:16px;overflow:auto;box-sizing:border-box">
+<h1 style="margin:0;font-size:24px;font-weight:600">أرصدة الإجازات</h1>
+<div style="background:#fff;border:1px solid #D9DFEA;border-radius:8px;overflow:hidden;max-width:880px">
+<table style="width:100%;border-collapse:collapse">
+<thead><tr>
+<th style="text-align:start;padding:10px 20px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA">الموظف</th>
+<th style="text-align:start;padding:10px 16px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA;width:140px">المستخدم (يوم)</th>
+<th style="text-align:start;padding:10px 16px;font-size:13px;font-weight:600;color:#5B6480;background:#E9EDF4;border-bottom:1px solid #D9DFEA;width:140px">المتبقي (يوم)</th>
+<th style="padding:10px 20px;background:#E9EDF4;border-bottom:1px solid #D9DFEA;width:260px"></th>
+</tr></thead>
+<tbody><sc-for list="{{ balanceRows }}" as="r" hint-placeholder-count="12"><tr>
+<td style="padding:11px 20px;border-bottom:1px solid #D9DFEA;font-weight:600">{{ r.name }}</td>
+<td dir="ltr" style="padding:11px 16px;border-bottom:1px solid #D9DFEA;font-variant-numeric:tabular-nums;text-align:right">{{ r.used }}</td>
+<td dir="ltr" style="padding:11px 16px;border-bottom:1px solid #D9DFEA;font-variant-numeric:tabular-nums;text-align:right;font-weight:600">{{ r.remaining }}</td>
+<td style="padding:11px 20px;border-bottom:1px solid #D9DFEA"><div style="height:6px;border-radius:3px;background:#E9EDF4;overflow:hidden"><div style="height:100%;width:{{ r.pct }}%;background:#364484"></div></div></td>
+</tr></sc-for></tbody>
+</table>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ corrOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(14,16,36,.45);display:flex;align-items:center;justify-content:center;z-index:20;color:#1F2540">
+<div style="width:920px;max-height:760px;background:#fff;border-radius:8px;box-shadow:0 16px 48px rgba(14,16,36,.3);display:flex;flex-direction:column;overflow:hidden">
+<div style="display:flex;align-items:flex-start;justify-content:space-between;padding:20px 24px 12px;gap:16px"><div><div style="font-size:13px;font-weight:500;color:#5B6480">التصحيحات</div><div style="font-size:24px;font-weight:600;line-height:1.2">{{ corrName }}</div></div><button onClick="{{ corrClose }}" aria-label="إلغاء" style="width:36px;height:36px;border:1px solid #D9DFEA;border-radius:8px;background:#fff;color:#5B6480;font:inherit;font-size:18px;cursor:pointer;line-height:1" style-hover="border-color:#5265AC">×</button></div>
+<div style="padding:0 24px 8px;font-size:18px;font-weight:600">استراحات اليوم</div>
+<sc-if value="{{ corrEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:48px 24px 56px;text-align:center;color:#5B6480">لا توجد استراحات اليوم</div></sc-if>
+<sc-if value="{{ corrHas }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid;grid-template-columns:minmax(150px,1.1fr) 76px 76px 76px minmax(0,2fr);gap:12px;padding:8px 24px;background:#E9EDF4;border-top:1px solid #D9DFEA;border-bottom:1px solid #D9DFEA;font-size:13px;font-weight:600;color:#5B6480"><span></span><span>البداية</span><span>النهاية</span><span>المدة</span><span></span></div>
+<div style="overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column">
+<sc-for list="{{ corrRows }}" as="s" hint-placeholder-count="3">
+<div style="border-bottom:1px solid #D9DFEA;padding:12px 24px;display:flex;flex-direction:column;gap:12px;opacity:{{ s.opacity }}">
+<div style="display:grid;grid-template-columns:minmax(150px,1.1fr) 76px 76px 76px minmax(0,2fr);gap:12px;align-items:center">
+<span style="font-weight:600;text-decoration:{{ s.deco }}">{{ s.typeLabel }}</span>
+<span dir="ltr" style="font-variant-numeric:tabular-nums;text-align:right">{{ s.start }}</span>
+<span dir="ltr" style="font-variant-numeric:tabular-nums;text-align:right">{{ s.end }}</span>
+<span dir="ltr" style="font-variant-numeric:tabular-nums;text-align:right">{{ s.dur }}</span>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;flex-wrap:wrap">
+<div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ s.flags }}" as="f" hint-placeholder-count="0"><span style="display:inline-flex;align-items:center;height:22px;padding:0 6px;border-radius:4px;font-size:12px;font-weight:500;border:1px solid #D9DFEA;color:#5B6480;white-space:nowrap">{{ f.label }}</span></sc-for></div>
+<sc-if value="{{ s.canAct }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:6px;flex:none"><button onClick="{{ s.edit }}" style="height:32px;padding:0 10px;border:1px solid #D9DFEA;border-radius:8px;background:#fff;color:#1F2540;font:inherit;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap" style-hover="border-color:#5265AC">تعديل وقت الانتهاء</button><button onClick="{{ s.void_ }}" style="height:32px;padding:0 10px;border:1px solid #D9DFEA;border-radius:8px;background:#fff;color:#1F2540;font:inherit;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap" style-hover="border-color:#5265AC">إلغاء الاستراحة</button></div></sc-if>
+</div>
+</div>
+<sc-if value="{{ s.editing }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;align-items:flex-end;gap:12px;background:#F4F6FA;border:1px solid #D9DFEA;border-radius:8px;padding:12px 16px">
+<sc-if value="{{ s.isEdit }}" hint-placeholder-val="{{ false }}"><label style="display:flex;flex-direction:column;gap:6px;width:130px"><span style="font-size:13px;font-weight:500;color:#5B6480">النهاية</span><input type="time" lang="en-GB" dir="ltr" value="{{ corrEnd }}" onChange="{{ setCorrEnd }}" style="height:36px;padding:0 10px;border:1px solid #D9DFEA;border-radius:4px;background:#fff;color:#1F2540;font:inherit;font-size:15px;box-sizing:border-box" style-focus="outline:2px solid #5265AC;outline-offset:1px"></label></sc-if>
+<label style="display:flex;flex-direction:column;gap:6px;flex:1"><span style="font-size:13px;font-weight:500;color:#5B6480">ملاحظة (إلزامية)</span><input type="text" value="{{ corrNote }}" onChange="{{ setCorrNote }}" style="height:36px;padding:0 12px;border:1px solid #D9DFEA;border-radius:4px;background:#fff;color:#1F2540;font:inherit;font-size:15px;width:100%;box-sizing:border-box" style-focus="outline:2px solid #5265AC;outline-offset:1px"></label>
+<button onClick="{{ corrSave }}" disabled="{{ corrSaveDisabled }}" style="height:36px;padding:0 18px;border:0;border-radius:8px;font:inherit;font-size:15px;font-weight:600;cursor:{{ corrSaveCursor }};background:{{ corrSaveBg }};color:{{ corrSaveFg }}">حفظ</button>
+<button onClick="{{ corrCancel }}" style="height:36px;padding:0 14px;border:1px solid #D9DFEA;border-radius:8px;background:#fff;color:#1F2540;font:inherit;font-size:15px;font-weight:500;cursor:pointer" style-hover="border-color:#5265AC">إلغاء</button>
+</div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<div style="padding:12px 24px;background:#F4F6FA;border-top:1px solid #D9DFEA;font-size:13px;color:#5B6480;display:flex;justify-content:space-between"><span>الرصيد المستخدم</span><span dir="ltr" style="font-variant-numeric:tabular-nums;font-weight:600;color:#1F2540">{{ corrBudget }}</span></div>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;tileLayout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;a&quot;,&quot;options&quot;:[&quot;a&quot;,&quot;b&quot;,&quot;c&quot;],&quot;tsType&quot;:&quot;'a' | 'b' | 'c'&quot;,&quot;section&quot;:&quot;Board&quot;},&quot;dark&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Board&quot;},&quot;clockSpeed&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;10&quot;,&quot;options&quot;:[&quot;0&quot;,&quot;1&quot;,&quot;10&quot;],&quot;tsType&quot;:&quot;'0' | '1' | '10'&quot;,&quot;section&quot;:&quot;Demo&quot;},&quot;start&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;login&quot;,&quot;options&quot;:[&quot;login&quot;,&quot;agent&quot;,&quot;lead&quot;,&quot;manager&quot;,&quot;403&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Demo&quot;},&quot;scenario&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;demo&quot;,&quot;options&quot;:[&quot;demo&quot;,&quot;rich&quot;,&quot;buttons&quot;,&quot;empty&quot;,&quot;leave-overlap&quot;,&quot;leave-exceeds&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Demo&quot;},&quot;screen&quot;:{&quot;editor&quot;:null,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;capPending&quot;:{&quot;editor&quot;:null,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;corrAgent&quot;:{&quot;editor&quot;:null,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;loginError&quot;:{&quot;editor&quot;:null,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;decisionTab&quot;:{&quot;editor&quot;:null,&quot;default&quot;:&quot;pending&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.AGENTS=[{id:1,name:'حمزة عيسى',g:'m'},{id:2,name:'حمزة شحرور',g:'m'},{id:3,name:'وسيم شمس الدين',g:'m'},{id:4,name:'كرم قويدر',g:'m'},{id:5,name:'عمر شمه',g:'m'},{id:6,name:'فراس شما',g:'m'},{id:7,name:'طارق السراقبي',g:'m'},{id:8,name:'ملاذ كويتر',g:'m'},{id:9,name:'حازم مهاوش',g:'m'},{id:10,name:'نور أورفهلي',g:'f'},{id:11,name:'آلاء',g:'f'},{id:12,name:'إسراء',g:'f'}];
+    this.TYPES={smoke:{label:'استراحة تدخين',pool:'general',max:3,grace:1,autoEnd:10,allow:5,timed:true},prayer:{label:'استراحة صلاة',pool:'general',max:10,grace:2,autoEnd:20,allow:1,timed:true},meal:{label:'استراحة طعام',pool:'general',max:15,grace:2,autoEnd:25,allow:1,timed:true},toilet:{label:'دورة مياه',pool:'toilet',max:0,grace:0,autoEnd:20,allow:0,timed:false}};
+    this.STATUS={floor:{label:'متواجد',c:'#348074',tint:'#E6F2EF',dk:'#449686'},break:{label:'في استراحة',c:'#D68A1E',tint:'#FBF0DF',dk:'#E39A2F'},overrun:{label:'تجاوز المدة',c:'#C62B2B',tint:'#FBE7E7',dk:'#D94A4A'},leave:{label:'في إجازة',c:'#8A93AA',tint:'#EEF0F5',dk:'#A3ABC2'},away:{label:'في إجازة ساعية',c:'#1F8FC7',tint:'#E3F1FA',dk:'#3FA6D8'}};
+    this.LS={pending:{label:'قيد المراجعة',bg:'#EEF0F8',fg:'#242E69',bd:'#EEF0F8'},approved:{label:'مقبول',bg:'#1F2540',fg:'#FFFFFF',bd:'#1F2540'},rejected:{label:'مرفوض',bg:'transparent',fg:'#5B6480',bd:'#D9DFEA'},cancelled:{label:'ملغى',bg:'transparent',fg:'#5B6480',bd:'#D9DFEA'},revoked:{label:'تم سحب الموافقة',bg:'transparent',fg:'#5B6480',bd:'#D9DFEA'}};
+    this.TODAY='2026-09-09'; this.BUDGET=1500; this.CAP_F=1; this.CAP_M=2;
+    this.state=this.seed(props);
+  }
+  truthy(v){return v===true||v==='true'||v===1||v==='1';}
+  T(s){ if(!s) return NaN; const p=String(s).split(':').map(Number); return p[0]*3600+(p[1]||0)*60+(p[2]||0); }
+  pad(n){return String(n).padStart(2,'0');}
+  mmss(s){ s=Math.max(0,Math.floor(s)); return this.pad(Math.floor(s/60))+':'+this.pad(s%60); }
+  hhmm(s){ s=Math.max(0,Math.floor(s)); return this.pad(Math.floor(s/3600))+':'+this.pad(Math.floor(s%3600/60)); }
+  fmtD(iso){ const p=iso.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; }
+  parseD(s){ const m=/^(\d{2})\/(\d{2})\/(\d{4})$/.exec((s||'').trim()); return m?m[3]+'-'+m[2]+'-'+m[1]:null; }
+  workdays(a,b){ let n=0; const d=new Date(a+'T12:00:00'), e=new Date(b+'T12:00:00'); while(d<=e){ const w=d.getDay(); if(w!==5&&w!==6) n++; d.setDate(d.getDate()+1);} return n; }
+  days(h){ return (h/8).toFixed(2); }
+  agent(a){ return this.AGENTS.find(x=>x.id===a); }
+  seed(p){
+    const sc=p.scenario||'demo'; let id=0;
+    const S=(a,type,start,end,x)=>Object.assign({id:++id,a,type,start:this.T(start),end:end?this.T(end):null,effMax:this.TYPES[type].max*60,endedBy:end?'agent':null,auto:false,stale:false,eod:false,voided:false,edited:false,origEnd:null,note:''},x||{});
+    const sessions=[S(1,'smoke','08:41','08:44'),S(1,'prayer','09:30','09:39'),S(1,'smoke','10:38'),S(3,'smoke','09:05','09:08'),S(4,'meal','08:30','08:45'),S(4,'prayer','09:50','10:00'),S(6,'smoke','09:12','09:17',{endedBy:'lead',auto:true,edited:true,origEnd:this.T('09:22'),note:'عاد إلى العمل قبل تسجيل الإنهاء'}),S(9,'toilet','10:40'),S(11,'smoke','08:50','08:53'),S(11,'smoke','10:10','10:13'),S(12,'toilet','09:20','09:23')];
+    if(sc==='rich') sessions.push(S(2,'smoke','10:40:58'));
+    if(sc==='buttons'){ sessions.push(S(2,'prayer','09:00','09:09')); sessions.push(S(3,'meal','10:30')); }
+    let lid=0; const L=(a,kind,x)=>Object.assign({id:++lid,a,kind,status:'approved',note:'',date:'',from:'',to:'',startDate:'',endDate:''},x);
+    let leaves=[L(5,'hourly',{date:'2026-09-09',from:'10:00',to:'12:00',hours:2,reason:'موعد طبي'}),L(7,'daily',{startDate:'2026-09-09',endDate:'2026-09-09',hours:8,reason:'ظرف عائلي'}),L(2,'hourly',{date:'2026-09-02',from:'08:00',to:'10:00',hours:2,reason:'معاملة رسمية'}),L(2,'hourly',{date:'2026-09-14',from:'09:00',to:'11:00',hours:2,reason:'موعد طبي',status:'pending'}),L(2,'daily',{startDate:'2026-08-20',endDate:'2026-08-20',hours:8,reason:'ظرف عائلي',status:'rejected'}),L(2,'hourly',{date:'2026-08-27',from:'14:00',to:'16:00',hours:2,reason:'معاملة رسمية',status:'cancelled'}),L(10,'daily',{startDate:'2026-09-21',endDate:'2026-09-22',hours:16,reason:'ظرف عائلي',status:'pending'}),L(3,'hourly',{date:'2026-09-10',from:'14:00',to:'16:00',hours:2,reason:'معاملة رسمية',status:'pending'}),L(11,'daily',{startDate:'2026-08-03',endDate:'2026-08-04',hours:16,reason:'ظرف عائلي'}),L(4,'hourly',{date:'2026-08-31',from:'12:00',to:'16:00',hours:4,reason:'موعد طبي'})];
+    if(sc==='empty') leaves=leaves.filter(l=>l.status!=='pending');
+    const start=p.start||'login'; let role=null, screen='login';
+    if(start==='agent'){role='agent';screen=p.screen||'home';} else if(start==='lead'){role='lead';screen=p.screen||'board';} else if(start==='manager'){role='manager';screen=p.screen||'board';} else if(start==='403'){role='agent';screen='403';}
+    const lf={kind:'hourly',date:'',from:'',to:'',startDate:'',endDate:'',reason:''};
+    if(sc==='leave-overlap') Object.assign(lf,{date:'14/09/2026',from:'09:00',to:'10:00',reason:'موعد طبي'});
+    if(sc==='leave-exceeds') Object.assign(lf,{kind:'daily',startDate:'01/10/2026',endDate:'30/10/2026',reason:'ظرف عائلي'});
+    return {role,screen,now:this.T('10:42:10'),sessions,leaves,cap:2,capPending:this.truthy(p.capPending)?3:null,corr:p.corrAgent?{a:Number(p.corrAgent)}:null,corrEdit:null,loginUser:'',loginPass:'',loginError:this.truthy(p.loginError),lf,lfTouched:sc.indexOf('leave-')===0,decTab:p.decisionTab||'pending',decNotes:{},summaryDate:'09/09/2026',me:2};
+  }
+  propKey(p){ return [p.start,p.screen,p.scenario,p.capPending,p.corrAgent,p.loginError,p.decisionTab].join('|'); }
+  componentDidMount(){ this.timer=setInterval(()=>this.tick(),500); }
+  componentWillUnmount(){ clearInterval(this.timer); }
+  componentDidUpdate(prev){ if(this.propKey(prev)!==this.propKey(this.props)) this.setState(this.seed(this.props)); }
+  speed(){ const v=this.props.clockSpeed; if(v==null||v==='') return 10; const n=Number(v); return isNaN(n)?10:n; }
+  tick(){ const sp=this.speed(); if(!sp) return; this.setState(s=>{ const now=s.now+0.5*sp; return {now,sessions:this.autoEnd(s.sessions,now)}; }); }
+  autoEnd(sessions,now){ const EOD=this.T('16:00'); return sessions.map(s=>{ if(s.end!=null) return s; const ty=this.TYPES[s.type], el=now-s.start;
+    if(now>=EOD) return Object.assign({},s,{end:EOD,endedBy:'system',eod:true});
+    if(ty.timed&&el>=ty.autoEnd*60) return Object.assign({},s,{end:s.start+ty.autoEnd*60,endedBy:'system',auto:true});
+    if(!ty.timed&&el>=1200) return Object.assign({},s,{end:s.start+1200,endedBy:'system',stale:true});
+    return s; }); }
+  dur(s,now){ return (s.end==null?now:s.end)-s.start; }
+  usedSec(st,a){ return st.sessions.filter(s=>s.a===a&&!s.voided&&this.TYPES[s.type].timed).reduce((n,s)=>n+this.dur(s,st.now),0); }
+  count(st,a,t){ return st.sessions.filter(s=>s.a===a&&!s.voided&&s.type===t).length; }
+  open(st,a){ return st.sessions.find(s=>s.a===a&&s.end==null&&!s.voided)||null; }
+  isOverrun(s,now){ const ty=this.TYPES[s.type]; return ty.timed&&this.dur(s,now)>s.effMax+ty.grace*60; }
+  leaveNow(st,a){ return st.leaves.find(l=>l.a===a&&l.status==='approved'&&((l.kind==='daily'&&l.startDate<=this.TODAY&&this.TODAY<=l.endDate)||(l.kind==='hourly'&&l.date===this.TODAY&&this.T(l.from)<=st.now&&st.now<this.T(l.to))))||null; }
+  usedHours(st,a){ return st.leaves.filter(l=>l.a===a&&l.status==='approved').reduce((n,l)=>n+l.hours,0); }
+  remaining(st,a){ return this.days(112-this.usedHours(st,a)); }
+  poolOpen(st){ const o=st.sessions.filter(s=>s.end==null&&!s.voided); return {g:o.filter(s=>this.TYPES[s.type].pool==='general').length,tf:o.filter(s=>s.type==='toilet'&&this.agent(s.a).g==='f').length,tm:o.filter(s=>s.type==='toilet'&&this.agent(s.a).g==='m').length}; }
+  status(st,a){ const lv=this.leaveNow(st,a); if(lv) return lv.kind==='daily'?'leave':'away'; const o=this.open(st,a); if(o) return this.isOverrun(o,st.now)?'overrun':'break'; return 'floor'; }
+  avail(st,a,t){ const ty=this.TYPES[t], ag=this.agent(a);
+    if(st.now<this.T('08:00')||st.now>=this.T('16:00')) return {ok:false,sub:'غير متاح اليوم'};
+    if(this.open(st,a)||this.leaveNow(st,a)) return {ok:false,sub:''};
+    if(ty.allow&&this.count(st,a,t)>=ty.allow) return {ok:false,sub:'غير متاح اليوم'};
+    if(ty.timed&&this.usedSec(st,a)>=this.BUDGET) return {ok:false,sub:'غير متاح اليوم'};
+    const p=this.poolOpen(st); const full=ty.pool==='general'?p.g>=st.cap:(ag.g==='f'?p.tf>=this.CAP_F:p.tm>=this.CAP_M);
+    return full?{ok:false,sub:'مشغول — حاول بعد قليل'}:{ok:true,sub:''}; }
+  startBreak(t){ this.setState(st=>{ if(!this.avail(st,st.me,t).ok) return null; const ty=this.TYPES[t]; const rem=Math.max(0,this.BUDGET-this.usedSec(st,st.me)); return {sessions:st.sessions.concat([{id:Date.now(),a:st.me,type:t,start:st.now,end:null,effMax:ty.timed?Math.min(ty.max*60,rem):0,endedBy:null,auto:false,stale:false,eod:false,voided:false,edited:false,origEnd:null,note:''}])}; }); }
+  endBreak(){ this.setState(st=>({sessions:st.sessions.map(s=>s.a===st.me&&s.end==null?Object.assign({},s,{end:st.now,endedBy:'agent'}):s)})); }
+  go(screen){ this.setState({screen,corr:null,corrEdit:null,capPending:null}); }
+  setRole(role){ this.setState({role,screen:role==='agent'?'home':'board',corr:null,corrEdit:null,capPending:null,loginError:false}); }
+  logout(){ this.setState({role:null,screen:'login',loginUser:'',loginPass:'',loginError:false,corr:null}); }
+  doLogin(ev){ ev.preventDefault(); this.setState(s=>(!s.loginUser.trim()||!s.loginPass)?{loginError:true}:{loginError:false,role:'agent',screen:'home'}); }
+  meVals(st){ const a=st.me, stt=this.status(st,a), S=this.STATUS[stt], o=this.open(st,a), ty=o?this.TYPES[o.type]:null, el=o?this.dur(o,st.now):0;
+    return {tint:S.tint,stripe:S.c,statusLabel:S.label,onFloor:stt==='floor',onBreak:!!o,breakLabel:ty?ty.label:'',timer:o?(ty.timed?this.mmss(el)+' / '+this.mmss(o.effMax):this.mmss(el)):'',pct:o&&ty.timed&&o.effMax>0?Math.min(100,Math.round(el/o.effMax*100)):0,showBar:!!(o&&ty.timed)}; }
+  breakButtons(st){ return ['smoke','prayer','meal','toilet'].map(t=>{ const av=this.avail(st,st.me,t); return {label:this.TYPES[t].label,disabled:!av.ok,sub:av.sub,hasSub:!!av.sub,color:av.ok?'#1F2540':'#A3ABC2',cursor:av.ok?'pointer':'not-allowed',start:()=>this.startBreak(t)}; }); }
+  navFor(role){ return role==='agent'?[['home','الرئيسية'],['leave','الإجازات']]:role==='lead'?[['board','اللوحة الحية'],['requests','طلبات الإجازة']]:role==='manager'?[['board','اللوحة الحية'],['decisions','قرارات الإجازة'],['summary','الملخص اليومي'],['balances','أرصدة الإجازات']]:[]; }
+  tile(st,a,dark,lead){
+    const ag=this.agent(a), stt=this.status(st,a), S=this.STATUS[stt], o=this.open(st,a), used=Math.min(25,Math.floor(this.usedSec(st,a)/60));
+    const done=st.sessions.filter(s=>s.a===a&&s.end!=null), flags=[];
+    if(done.some(s=>s.auto&&!s.voided)) flags.push({label:'إنهاء تلقائي'});
+    if(done.some(s=>s.stale)) flags.push({label:'لم يُسجَّل الإنهاء'});
+    if(done.some(s=>s.eod)) flags.push({label:'نهاية الدوام'});
+    if(done.some(s=>s.edited)) flags.push({label:'معدّل'});
+    const lv=this.leaveNow(st,a); let note='';
+    if(stt==='away') note='من '+lv.from+' إلى '+lv.to;
+    if(stt==='leave') note='إجازة يومية · '+(lv.startDate===lv.endDate?this.fmtD(lv.startDate):'من '+this.fmtD(lv.startDate)+' إلى '+this.fmtD(lv.endDate));
+    const n=t=>this.count(st,a,t), hasBreak=!!o&&stt!=='away'&&stt!=='leave';
+    return {id:a,name:ag.name,status:stt,statusLabel:S.label,stripe:dark?S.dk:S.c,tint:dark?'#13192E':S.tint,chipFg:dark?'#0E1024':'#FFFFFF',hasBreak,breakLabel:o?this.TYPES[o.type].label:'',
+      timer:o?(this.TYPES[o.type].timed?this.mmss(this.dur(o,st.now))+' / '+this.mmss(o.effMax):this.mmss(this.dur(o,st.now))):'',budget:used+' / 25',pct:used*4,
+      counters:'تدخين '+n('smoke')+'/5 · صلاة '+n('prayer')+'/1 · طعام '+n('meal')+'/1',flags,hasFlags:flags.length>0,hasNote:!!note,note,
+      ticks:Array.from({length:25},(_,i)=>({bg:i<used?(dark?'#5265AC':'#364484'):(dark?'#26304A':'#E9EDF4')})),
+      cursor:lead?'pointer':'default',open:lead?()=>this.setState({corr:{a},corrEdit:null}):null};
+  }
+  boardVals(st,dark,lead){
+    const p=this.poolOpen(st), on=dark?'#5265AC':'#364484', off=dark?'#26304A':'#E9EDF4';
+    const mk=(label,n,cap)=>({label,count:n+'/'+cap,segs:Array.from({length:cap},(_,i)=>({bg:i<n?on:off}))});
+    return {tiles:this.AGENTS.map(ag=>this.tile(st,ag.id,dark,lead)),
+      pools:[mk('المجموعة العامة',p.g,st.cap),mk('دورة مياه — نساء',p.tf,this.CAP_F),mk('دورة مياه — رجال',p.tm,this.CAP_M)],
+      showCap:lead,capOpts:[1,2,3].map(n=>({n:String(n),bg:n===st.cap?'#364484':(n===st.capPending?'#EEF0F8':'transparent'),fg:n===st.cap?'#fff':(n===st.capPending?'#242E69':(dark?'#F4F6FA':'#1F2540')),select:()=>this.setState(s=>({capPending:n===s.cap?null:n}))})),
+      capConfirm:st.capPending!=null,capFrom:String(st.cap),capTo:String(st.capPending==null?'':st.capPending),
+      confirmCap:()=>this.setState(s=>({cap:s.capPending==null?s.cap:s.capPending,capPending:null})),cancelCap:()=>this.setState({capPending:null})};
+  }
+  when(l){ return l.kind==='hourly'?this.fmtD(l.date)+' · من '+l.from+' إلى '+l.to:(l.startDate===l.endDate?this.fmtD(l.startDate):'من '+this.fmtD(l.startDate)+' إلى '+this.fmtD(l.endDate)); }
+  sortKey(l){ return l.kind==='hourly'?l.date+' '+l.from:l.startDate; }
+  reqRow(st,l){ const c=this.LS[l.status]; return {id:l.id,agent:this.agent(l.a).name,kindLabel:l.kind==='hourly'?'إجازة ساعية':'إجازة يومية',when:this.when(l),hours:String(l.hours),reason:l.reason,balance:this.remaining(st,l.a),chipLabel:c.label,chipBg:c.bg,chipFg:c.fg,chipBd:c.bd,pending:l.status==='pending',note:st.decNotes[l.id]||'',decisionNote:l.note,hasDecisionNote:!!l.note,
+    setNote:ev=>{const v=ev.target.value;this.setState(s=>({decNotes:Object.assign({},s.decNotes,{[l.id]:v})}));},approve:()=>this.decide(l.id,'approved'),reject:()=>this.decide(l.id,'rejected'),revoke:()=>this.decide(l.id,'revoked'),cancel:()=>this.cancelLeave(l.id)}; }
+  setLf(patch){ this.setState(s=>({lf:Object.assign({},s.lf,patch)})); }
+  validateLeave(st){ const f=st.lf, a=st.me, remH=112-this.usedHours(st,a), act=st.leaves.filter(l=>l.a===a&&(l.status==='pending'||l.status==='approved'));
+    if(f.kind==='hourly'){ const d=this.parseD(f.date), h=(this.T(f.to)-this.T(f.from))/3600;
+      if(!d||!f.from||!f.to||!(h>0)||!f.reason.trim()) return {msg:'',missing:true};
+      if(h>remH) return {msg:'يتجاوز الرصيد المتبقي',missing:false};
+      if(act.some(l=>(l.kind==='hourly'&&l.date===d&&this.T(l.from)<this.T(f.to)&&this.T(f.from)<this.T(l.to))||(l.kind==='daily'&&l.startDate<=d&&d<=l.endDate))) return {msg:'يتعارض مع طلب آخر',missing:false};
+    } else { const s=this.parseD(f.startDate), e=this.parseD(f.endDate);
+      if(!s||!e||e<s||!f.reason.trim()) return {msg:'',missing:true};
+      if(this.workdays(s,e)*8>remH) return {msg:'يتجاوز الرصيد المتبقي',missing:false};
+      if(act.some(l=>(l.kind==='daily'&&l.startDate<=e&&s<=l.endDate)||(l.kind==='hourly'&&s<=l.date&&l.date<=e))) return {msg:'يتعارض مع طلب آخر',missing:false}; }
+    return null; }
+  submitLeave(ev){ ev.preventDefault(); this.setState(st=>{ if(this.validateLeave(st)) return {lfTouched:true}; const f=st.lf, l={id:Date.now(),a:st.me,kind:f.kind,status:'pending',note:'',reason:f.reason.trim(),date:'',from:'',to:'',startDate:'',endDate:'',hours:0};
+    if(f.kind==='hourly'){ l.date=this.parseD(f.date); l.from=f.from; l.to=f.to; l.hours=(this.T(f.to)-this.T(f.from))/3600; } else { l.startDate=this.parseD(f.startDate); l.endDate=this.parseD(f.endDate); l.hours=this.workdays(l.startDate,l.endDate)*8; }
+    return {leaves:st.leaves.concat([l]),lf:{kind:f.kind,date:'',from:'',to:'',startDate:'',endDate:'',reason:''},lfTouched:false}; }); }
+  cancelLeave(id){ this.setState(st=>({leaves:st.leaves.map(l=>l.id===id&&l.status==='pending'?Object.assign({},l,{status:'cancelled'}):l)})); }
+  decide(id,status){ this.setState(st=>({leaves:st.leaves.map(l=>l.id===id?Object.assign({},l,{status,note:st.decNotes[id]||''}):l)})); }
+  leaveVals(st){ const f=st.lf, err=st.lfTouched?this.validateLeave(st):null, h=f.kind==='hourly';
+    return {myBalance:this.remaining(st,st.me),lfHourly:h,lfDaily:!h,hourlyBg:h?'#364484':'transparent',hourlyFg:h?'#fff':'#1F2540',dailyBg:h?'transparent':'#364484',dailyFg:h?'#1F2540':'#fff',
+      lfDate:f.date,lfFrom:f.from,lfTo:f.to,lfStart:f.startDate,lfEnd:f.endDate,lfReason:f.reason,lfError:err?err.msg:'',lfHasError:!!(err&&err.msg),lfBorder:err?'#364484':'#D9DFEA',
+      setKindHourly:()=>this.setLf({kind:'hourly'}),setKindDaily:()=>this.setLf({kind:'daily'}),setLfDate:ev=>this.setLf({date:ev.target.value}),setLfFrom:ev=>this.setLf({from:ev.target.value}),setLfTo:ev=>this.setLf({to:ev.target.value}),setLfStart:ev=>this.setLf({startDate:ev.target.value}),setLfEnd:ev=>this.setLf({endDate:ev.target.value}),setLfReason:ev=>this.setLf({reason:ev.target.value}),submitLeave:ev=>this.submitLeave(ev),
+      myRequests:st.leaves.filter(l=>l.a===st.me).sort((x,y)=>this.sortKey(y).localeCompare(this.sortKey(x))).map(l=>this.reqRow(st,l))}; }
+  summaryRows(st){ const d=this.parseD(st.summaryDate)||this.TODAY, today=d===this.TODAY;
+    return this.AGENTS.map(ag=>{ const all=today?st.sessions.filter(s=>s.a===ag.id):[], ss=all.filter(s=>!s.voided);
+      const bt=t=>{const x=ss.filter(s=>s.type===t);return {n:x.length,min:Math.floor(x.reduce((n,s)=>n+this.dur(s,st.now),0)/60)};};
+      const sm=bt('smoke'),pr=bt('prayer'),ml=bt('meal'),tl=bt('toilet'), lv=st.leaves.filter(l=>l.a===ag.id&&l.status==='approved');
+      const hrs=lv.filter(l=>l.kind==='hourly'&&l.date===d).reduce((n,l)=>n+l.hours,0), day=lv.some(l=>l.kind==='daily'&&l.startDate<=d&&d<=l.endDate)?1:0, used=Math.min(25,sm.min+pr.min+ml.min);
+      return {name:ag.name,budget:used+' / 25',smokeN:String(sm.n),smokeMin:String(sm.min),prayerN:String(pr.n),prayerMin:String(pr.min),mealN:String(ml.n),mealMin:String(ml.min),toiletN:String(tl.n),overruns:String(ss.filter(s=>this.isOverrun(s,st.now)).length),auto:String(ss.filter(s=>s.auto).length),edited:String(all.filter(s=>s.edited).length),leaveH:String(hrs),leaveD:String(day)}; }); }
+  exportCsv(){ const st=this.state, rows=this.summaryRows(st), d=this.parseD(st.summaryDate)||this.TODAY;
+    const head=['الموظف','الرصيد المستخدم','تدخين — العدد','تدخين — الدقائق','صلاة — العدد','صلاة — الدقائق','طعام — العدد','طعام — الدقائق','دورة مياه — العدد','التجاوزات','إنهاء تلقائي','معدّل','الإجازة — الساعات','الإجازة — يوم'];
+    const lines=[head.join(',')].concat(rows.map(r=>[r.name,r.budget.replace(' / ','/'),r.smokeN,r.smokeMin,r.prayerN,r.prayerMin,r.mealN,r.mealMin,r.toiletN,r.overruns,r.auto,r.edited,r.leaveH,r.leaveD].join(',')));
+    const blob=new Blob(['\uFEFF'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'}), url=URL.createObjectURL(blob), a=document.createElement('a'); a.href=url; a.download='staffflow-'+d+'.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000); }
+  tableVals(st){ const pend=st.leaves.filter(l=>l.status==='pending'), appr=st.leaves.filter(l=>l.status==='approved'), byDate=(x,y)=>this.sortKey(x).localeCompare(this.sortKey(y)), tp=st.decTab==='pending';
+    return {allRequests:st.leaves.slice().sort((x,y)=>this.sortKey(y).localeCompare(this.sortKey(x))).map(l=>this.reqRow(st,l)),
+      decPendingView:tp,decApprovedView:!tp,tabPending:()=>this.setState({decTab:'pending'}),tabApproved:()=>this.setState({decTab:'approved'}),tabPendingBg:tp?'#364484':'transparent',tabPendingFg:tp?'#fff':'#1F2540',tabApprovedBg:tp?'transparent':'#364484',tabApprovedFg:tp?'#1F2540':'#fff',
+      pendingCount:String(pend.length),approvedCount:String(appr.length),hasPending:pend.length>0,noPending:pend.length===0,pendingRows:pend.sort(byDate).map(l=>this.reqRow(st,l)),approvedRows:appr.sort((x,y)=>byDate(y,x)).map(l=>this.reqRow(st,l)),
+      summaryDate:st.summaryDate,setSummaryDate:ev=>this.setState({summaryDate:ev.target.value}),summaryRows:this.summaryRows(st),exportCsv:()=>this.exportCsv(),
+      balanceRows:this.AGENTS.map(ag=>{const u=this.usedHours(st,ag.id);return {name:ag.name,used:this.days(u),remaining:this.days(112-u),pct:Math.round(u/112*100)};})}; }
+  saveCorr(){ this.setState(st=>{ const e=st.corrEdit; if(!e||!e.note.trim()) return null;
+    return {corrEdit:null,sessions:st.sessions.map(s=>{ if(s.id!==e.sid) return s; if(e.mode==='void') return Object.assign({},s,{voided:true,edited:true,endedBy:'lead',note:e.note});
+      const t=this.T(e.end); if(isNaN(t)) return s; return Object.assign({},s,{origEnd:s.origEnd==null?s.end:s.origEnd,end:Math.max(s.start,t),edited:true,endedBy:'lead',note:e.note}); })}; }); }
+  corrVals(st){ const c=st.corr; if(!c) return {corrOpen:false};
+    const rows=st.sessions.filter(s=>s.a===c.a).sort((x,y)=>x.start-y.start).map(s=>{ const ty=this.TYPES[s.type], openS=s.end==null, flags=[];
+      if(!openS&&this.isOverrun(s,st.now)) flags.push({label:'تجاوز المدة'}); if(s.auto) flags.push({label:'إنهاء تلقائي'}); if(s.stale) flags.push({label:'لم يُسجَّل الإنهاء'}); if(s.eod) flags.push({label:'نهاية الدوام'}); if(s.edited) flags.push({label:'معدّل'});
+      const ed=!!(st.corrEdit&&st.corrEdit.sid===s.id);
+      return {id:s.id,typeLabel:ty.label,start:this.hhmm(s.start),end:openS?'—':this.hhmm(s.end),dur:this.mmss(this.dur(s,st.now)),flags,canAct:!openS&&!s.voided&&!ed,editing:ed,isEdit:ed&&st.corrEdit.mode==='edit',opacity:s.voided?0.5:1,deco:s.voided?'line-through':'none',
+        edit:()=>this.setState({corrEdit:{sid:s.id,mode:'edit',end:this.hhmm(s.end),note:''}}),void_:()=>this.setState({corrEdit:{sid:s.id,mode:'void',end:'',note:''}})}; });
+    const e=st.corrEdit||{end:'',note:'',mode:''}, can=!!(st.corrEdit&&e.note.trim()&&(e.mode==='void'||/^\d{2}:\d{2}$/.test(e.end)));
+    return {corrOpen:true,corrName:this.agent(c.a).name,corrRows:rows,corrHas:rows.length>0,corrEmpty:rows.length===0,corrEnd:e.end,corrNote:e.note,corrSaveDisabled:!can,corrSaveCursor:can?'pointer':'not-allowed',corrSaveBg:can?'#364484':'#E9EDF4',corrSaveFg:can?'#fff':'#A3ABC2',
+      corrBudget:Math.min(25,Math.floor(this.usedSec(st,c.a)/60))+' / 25',
+      setCorrEnd:ev=>{const v=ev.target.value;this.setState(s=>({corrEdit:Object.assign({},s.corrEdit,{end:v})}));},setCorrNote:ev=>{const v=ev.target.value;this.setState(s=>({corrEdit:Object.assign({},s.corrEdit,{note:v})}));},
+      corrCancel:()=>this.setState({corrEdit:null}),corrSave:()=>this.saveCorr(),corrClose:()=>this.setState({corr:null,corrEdit:null})}; }
+  renderVals(){
+    const st=this.state, p=this.props, role=st.role, screen=st.screen;
+    const isLogin=screen==='login', is403=screen==='403', isApp=!isLogin&&!is403;
+    const dark=this.truthy(p.dark)&&screen==='board', layout=p.tileLayout||'a', lead=role==='lead';
+    const sp=this.speed();
+    const nav=this.navFor(role).map(([id,label])=>({label,go:()=>this.go(id),underline:screen===id?'#5265AC':'transparent',opacity:screen===id?1:0.8}));
+    const roles=[['agent','موظف خدمة عملاء'],['lead','مشرف'],['manager','مدير الفرع']].map(([r,label])=>({label,go:()=>this.setRole(r),bg:role===r?'#364484':'transparent',fg:role===r?'#fff':'#A3ABC2'}));
+    const v={theme:dark?'dark':'light',isLogin,is403,hasBar:!isLogin,sHome:isApp&&screen==='home',sLeave:isApp&&screen==='leave',sBoard:isApp&&screen==='board',sRequests:isApp&&screen==='requests',sDecisions:isApp&&screen==='decisions',sSummary:isApp&&screen==='summary',sBalances:isApp&&screen==='balances',
+      layoutA:layout==='a',layoutB:layout==='b',layoutC:layout==='c',nav,roles,clock:this.hhmm(st.now)+':'+this.pad(Math.floor(st.now)%60),demoMode:sp>1,
+      userName:role==='agent'?this.agent(st.me).name:role==='lead'?'مشرف':'مدير الفرع',userRole:role==='agent'?'موظف خدمة عملاء':'',
+      logout:()=>this.logout(),goHome:()=>this.go('home'),doLogin:ev=>this.doLogin(ev),loginUser:st.loginUser,loginPass:st.loginPass,loginError:st.loginError,
+      setLoginUser:ev=>this.setState({loginUser:ev.target.value}),setLoginPass:ev=>this.setState({loginPass:ev.target.value}),
+      me:this.meVals(st),breakButtons:this.breakButtons(st),endBreak:()=>this.endBreak()};
+    if(this.boardVals) Object.assign(v,this.boardVals(st,dark,lead));
+    if(this.leaveVals) Object.assign(v,this.leaveVals(st));
+    if(this.tableVals) Object.assign(v,this.tableVals(st));
+    if(this.corrVals) Object.assign(v,this.corrVals(st));
+    return v;
+  }
+}
+</script>
+</body>
+</html>
