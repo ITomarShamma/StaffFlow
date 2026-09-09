@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" aria-hidden="true">
+  <!-- Placeholder Sham Cash mark drawn from the description (two-part hexagon: indigo top-right, green bottom-left).
+       Replace this file with the real SVG; nothing else moves. -->
+  <defs>
+    <linearGradient id="sf-gi" x1="0.5" y1="0" x2="0.9" y2="0.75">
+      <stop offset="0" stop-color="#5265AC"/>
+      <stop offset="1" stop-color="#242E69"/>
+    </linearGradient>
+    <linearGradient id="sf-gg" x1="0.5" y1="1" x2="0.1" y2="0.3">
+      <stop offset="0" stop-color="#449686"/>
+      <stop offset="1" stop-color="#286E66"/>
+    </linearGradient>
+  </defs>
+  <path d="M10.2 27L50 4L89.8 27L89.8 73Z" fill="url(#sf-gi)"/>
+  <path d="M10.2 27L89.8 73L50 96L10.2 73Z" fill="url(#sf-gg)"/>
+  <path d="M10.2 27L89.8 73" fill="none" stroke="#0E1024" stroke-width="5"/>
+</svg>

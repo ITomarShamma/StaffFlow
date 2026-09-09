@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+/* Design tokens — docs/design/StaffFlow Screens.dc.html §Tokens. Status colours carry
+   meaning and appear nowhere else; red is overrun only. */
+@theme {
+  --font-sans: var(--font-plex), "IBM Plex Sans Arabic", system-ui, sans-serif;
+
+  --color-navy-900: #0e1024;
+  --color-navy-800: #13192e;
+  --color-indigo-700: #242e69;
+  --color-indigo-600: #364484;
+  --color-indigo-400: #5265ac;
+  --color-indigo-050: #eef0f8;
+  --color-green-700: #286e66;
+  --color-green-600: #348074;
+  --color-green-400: #449686;
+
+  --color-surface-0: #ffffff;
+  --color-surface-1: #f4f6fa;
+  --color-surface-2: #e9edf4;
+  --color-line: #d9dfea;
+  --color-ink: #1f2540;
+  --color-muted: #5b6480;
+  --color-disabled: #a3abc2;
+  --color-line-dark: #26304a;
+  --color-head-dark: #1a2138;
+
+  --color-floor: #348074;
+  --color-floor-tint: #e6f2ef;
+  --color-break: #d68a1e;
+  --color-break-tint: #fbf0df;
+  --color-overrun: #c62b2b;
+  --color-overrun-tint: #fbe7e7;
+  --color-leave: #8a93aa;
+  --color-leave-tint: #eef0f5;
+  --color-away: #1f8fc7;
+  --color-away-tint: #e3f1fa;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+  body {
+    margin: 0;
+    min-width: 1280px;
+    background: var(--color-surface-1);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  input,
+  button,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+  input::placeholder {
+    color: var(--color-disabled);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-indigo-400);
+    outline-offset: 1px;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
