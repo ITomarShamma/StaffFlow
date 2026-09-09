@@ -11,11 +11,12 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "db:reset": "prisma migrate reset --force",
+    "db:reset": "node scripts/db-reset.mjs",
     "db:migrate": "prisma migrate dev",
     "demo": "cross-env DEMO_CLOCK_MULTIPLIER=10 next dev -H 0.0.0.0 -p 3000",
     "admin": "tsx scripts/admin.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "demo:fresh": "npm run db:reset && npm run demo"
   },
   "dependencies": {
     "@prisma/adapter-better-sqlite3": "7.10.0",

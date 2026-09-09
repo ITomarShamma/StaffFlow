@@ -112,7 +112,7 @@ async function main() {
       break;
     }
     case "reset": {
-      execSync("npx prisma migrate reset --force", { stdio: "inherit" });
+      execSync("node scripts/db-reset.mjs", { stdio: "inherit" });
       break;
     }
     default:

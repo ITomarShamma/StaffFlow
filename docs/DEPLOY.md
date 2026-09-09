@@ -41,6 +41,9 @@ npm start             # http://0.0.0.0:3000 — Ctrl+C to stop; the service belo
 
 Change the seeded passwords straight away (see §7).
 
+Windows PowerShell 5.1 does not accept `&&` between commands: run them one per line, or use
+`npm run demo:fresh` (reset + demo in one npm script) when you want a clean demo database.
+
 ## 3. Run as a Windows service — NSSM
 
 **Why NSSM and not pm2:** NSSM is one executable that turns any command into a real Windows
