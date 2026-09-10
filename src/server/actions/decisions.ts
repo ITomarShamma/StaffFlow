@@ -20,7 +20,7 @@ const decideSchema = z.object({
   note: z.string().max(500).optional(),
 });
 
-export type DecisionError = "invalid" | "not_allowed" | "exceeds_balance";
+export type DecisionError = "invalid" | "not_allowed" | "exceeds_balance" | "server_error";
 
 /** Spec §6 — the Branch Manager approves, rejects or revokes; every decision is audit-logged. */
 export async function decideLeave(raw: unknown): Promise<ActionResult<DecisionError>> {
@@ -29,7 +29,9 @@ export async function decideLeave(raw: unknown): Promise<ActionResult<DecisionEr
   if (!input.success) return { ok: false, error: "invalid" };
   const { id, action } = input.data;
   const note = input.data.note?.trim() || null;
-  const result = await withLock(async (): Promise<ActionResult<DecisionError>> => {
+  let result: ActionResult<DecisionError>;
+  try {
+  result = await withLock(async (): Promise<ActionResult<DecisionError>> => {
     const now = await serverNow();
     const row = await prisma.leaveRequest.findUnique({ where: { id } });
     if (!row) return { ok: false, error: "not_allowed" };
@@ -59,6 +61,11 @@ export async function decideLeave(raw: unknown): Promise<ActionResult<DecisionEr
     });
     return { ok: true };
   });
+  } catch (e) {
+    // A locked or unreachable database must not reach the Branch Manager as a crash.
+    console.error("decideLeave failed", e);
+    return { ok: false, error: "server_error" };
+  }
   revalidatePath("/", "layout");
   return result;
 }

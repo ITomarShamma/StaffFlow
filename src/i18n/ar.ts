@@ -156,6 +156,32 @@ export const ar = {
     invalidEndTime: "وقت انتهاء غير صالح", // TODO-COPY end ≤ start or in the future
     notAllowed: "الإجراء غير مسموح", // TODO-COPY lifecycle refusal (e.g. approving a non-pending request)
     pageTitleSuffix: "StaffFlow",
+
+    // TODO-COPY leave refusals — Appendix A has only «يتجاوز الرصيد المتبقي» and
+    // «يتعارض مع طلب آخر»; every other cause used to fail silently (fixed 2026-09-10).
+    leaveErrors: {
+      dateInvalid: "اختر تاريخاً صالحاً", // TODO-COPY hourly date missing or not a real date
+      timeInvalid: "اختر وقت البداية والنهاية", // TODO-COPY from/to missing or not HH:mm
+      timeOrder: "وقت النهاية يجب أن يكون بعد وقت البداية", // TODO-COPY from ≥ to
+      outsideWorkHours: (start: string, end: string) => `الوقت خارج ساعات الدوام (${start} – ${end})`, // TODO-COPY
+      startDateInvalid: "اختر تاريخ البداية", // TODO-COPY
+      endDateInvalid: "اختر تاريخ النهاية", // TODO-COPY
+      dateOrder: "تاريخ النهاية قبل تاريخ البداية", // TODO-COPY
+      crossesYear: "لا يمكن أن يمتد الطلب على سنتين — قدّم طلبين منفصلين", // TODO-COPY decision A25
+      reasonRequired: "السبب مطلوب", // TODO-COPY spec §6 requires a reason
+      reasonTooLong: "السبب طويل جداً", // TODO-COPY over 200 characters
+      serverError: "تعذّر إرسال الطلب، حاول مرة أخرى", // TODO-COPY unexpected server failure
+      cancelFailed: "تعذّر إلغاء الطلب، حاول مرة أخرى", // TODO-COPY unexpected server failure
+    },
+
+    // TODO-COPY time picker — hour and minute columns instead of a bare text field.
+    timePicker: {
+      open: "اختيار الوقت", // TODO-COPY aria-label on the clock button
+      hour: "ساعة", // TODO-COPY hour column heading
+      minute: "دقيقة", // TODO-COPY minute column heading
+      placeholder: "--:--", // TODO-COPY empty time field
+      done: "تم", // TODO-COPY closes the picker
+    },
   },
 } as const;
 

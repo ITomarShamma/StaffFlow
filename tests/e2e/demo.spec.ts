@@ -263,6 +263,51 @@ test("spec §10 demo script, steps 0–11", async ({ browser }) => {
   const agentCsv = await a.context.request.get(`/manager/summary/csv?date=${DAY}`);
   expect(agentCsv.status()).toBe(403);
 
+  // ---- Leave refusals name their cause, and the time wheels set the value (decisions 2026-09-10) ----
+  const leaveError = a.page.locator('[data-testid="leave-form"] [role="alert"]');
+  await a.page.goto("/agent/leave");
+  await a.page.getByTestId("leave-form").waitFor();
+  // the clock button sets 09:30 without typing
+  await a.page.getByTestId("from-open").click();
+  await a.page.getByTestId("from-h-09").click();
+  await a.page.getByTestId("from-m-30").click();
+  await expect(a.page.getByTestId("from")).toHaveValue("09:30");
+  await a.page.getByTestId("from-done").click();
+  await expect(a.page.getByTestId("from-popover")).toBeHidden();
+  // end before start
+  await a.page.getByTestId("to").fill("09:00");
+  await a.page.locator('input[name="date"]').fill(DAY_AFTER);
+  await a.page.locator('input[name="reason"]').fill("مراجعة");
+  await a.page.getByRole("button", { name: "إرسال" }).click();
+  await expect(leaveError).toHaveText("!وقت النهاية يجب أن يكون بعد وقت البداية");
+  // outside work hours
+  await a.page.getByTestId("from").fill("07:00");
+  await a.page.getByTestId("to").fill("09:00");
+  await a.page.getByRole("button", { name: "إرسال" }).click();
+  await expect(leaveError).toHaveText("!الوقت خارج ساعات الدوام (08:00 – 16:00)");
+  // a missing reason is named, not swallowed (the window itself is valid here)
+  await a.page.getByTestId("from").fill("09:00");
+  await a.page.getByTestId("to").fill("10:00");
+  await a.page.locator('input[name="reason"]').fill("");
+  await a.page.getByRole("button", { name: "إرسال" }).click();
+  await expect(leaveError).toHaveText("!السبب مطلوب");
+  // a daily range that ends before it starts, with no native browser bubble swallowing the submit
+  await a.page.getByTestId("kind-daily").click();
+  await a.page.locator('input[name="startDate"]').fill(TOMORROW);
+  await a.page.locator('input[name="endDate"]').fill(DAY);
+  await a.page.locator('input[name="reason"]').fill("سفر");
+  await a.page.getByRole("button", { name: "إرسال" }).click();
+  await expect(leaveError).toHaveText("!تاريخ النهاية قبل تاريخ البداية");
+  // fixed, it goes through
+  await a.page.getByTestId("kind-hourly").click();
+  await a.page.locator('input[name="date"]').fill(DAY_AFTER);
+  await a.page.getByTestId("from").fill("09:00");
+  await a.page.getByTestId("to").fill("10:00");
+  await a.page.locator('input[name="reason"]').fill("مراجعة");
+  await a.page.getByRole("button", { name: "إرسال" }).click();
+  await expect(leaveError).toHaveCount(0);
+  await expect(a.page.locator('[data-testid="my-request"][data-status="pending"]')).toHaveCount(1);
+
   // ---- Team Lead leave (decision 2026-09-10): requests like an agent, decided by the manager, shown on the manager's board ----
   await lead.goto("/lead/leave");
   await expect(lead.getByTestId("balance-days")).toHaveText("14.00");

@@ -2,12 +2,13 @@
 // Team Lead (decision 2026-09-10: the Team Lead requests leave too).
 
 import { ar } from "@/i18n/ar";
+import { loadConfig } from "@/server/config";
 import { myLeave } from "@/server/queries";
 import { LeaveForm } from "./LeaveForm";
 import { MyRequestsTable } from "./LeaveTables";
 
 export async function LeaveScreen({ userId }: { userId: string }) {
-  const mine = await myLeave(userId);
+  const [mine, cfg] = await Promise.all([myLeave(userId), loadConfig()]);
   return (
     <div className="flex-1 min-h-0 px-8 py-6 flex flex-col gap-4 overflow-auto box-border">
       <h1 className="m-0 text-2xl font-semibold">{ar.nav.leave}</h1>
@@ -22,7 +23,7 @@ export async function LeaveScreen({ userId }: { userId: string }) {
               {ar.table.day}
             </span>
           </div>
-          <LeaveForm />
+          <LeaveForm workStart={cfg.workStart} workEnd={cfg.workEnd} />
         </div>
         <MyRequestsTable rows={mine.rows} />
       </div>

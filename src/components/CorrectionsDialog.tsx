@@ -10,6 +10,7 @@ import { ar } from "@/i18n/ar";
 import { editSessionEnd, voidBreakSession, type CorrectionError } from "@/server/actions/corrections";
 import type { CorrectionRowVM } from "@/server/queries";
 import { FlagChip } from "./Chips";
+import { TimePicker } from "./TimePicker";
 import { useLiveNow } from "./useLiveNow";
 
 const flagLabel: Record<CorrectionRowVM["flags"][number], string> = {
@@ -48,6 +49,8 @@ export function CorrectionsDialog({
   nowMs,
   multiplier,
   closeHref,
+  workStart,
+  workEnd,
 }: {
   agentName: string;
   rows: CorrectionRowVM[];
@@ -56,6 +59,8 @@ export function CorrectionsDialog({
   nowMs: number;
   multiplier: number;
   closeHref: string;
+  workStart: string;
+  workEnd: string;
 }) {
   const live = useLiveNow(nowMs, multiplier);
   const [edit, setEdit] = useState<{ id: string; mode: "edit" | "void"; end: string; note: string } | null>(null);
@@ -162,16 +167,14 @@ export function CorrectionsDialog({
                         {edit.mode === "edit" && (
                           <label className="flex flex-col gap-1.5 w-[130px]">
                             <span className="text-[13px] font-medium text-muted">{ar.breaks.end}</span>
-                            <input
-                              type="text"
-                              inputMode="numeric"
-                              placeholder="HH:mm"
-                              maxLength={5}
-                              dir="ltr"
+                            <TimePicker
                               value={edit.end}
-                              onChange={(e) => setEdit({ ...edit, end: e.target.value })}
-                              className="h-9 px-2.5 border border-line rounded bg-surface-0 box-border tabular-nums"
-                              data-testid="end-time"
+                              onChange={(end) => setEdit({ ...edit, end })}
+                              min={workStart}
+                              max={workEnd}
+                              name="end-time"
+                              step={1}
+                              testId="end-time"
                             />
                           </label>
                         )}

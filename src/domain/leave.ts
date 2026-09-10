@@ -54,13 +54,62 @@ export function findOverlap(candidate: Interval, existing: readonly LeaveRecord[
   return existing.find((r) => isActiveRequest(r) && overlaps(candidate, r));
 }
 
-export type SubmissionError = "invalid_window" | "exceeds_balance" | "overlaps";
+/**
+ * Every way a submission can be refused, one code per cause (decision 2026-09-10).
+ * The UI turns each into its own Arabic message beside the field that caused it, so a
+ * refusal never reaches the requester as a silent no-op.
+ */
+export type SubmissionError =
+  | "date_invalid"
+  | "time_invalid"
+  | "time_order"
+  | "outside_work_hours"
+  | "start_date_invalid"
+  | "end_date_invalid"
+  | "date_order"
+  | "crosses_year"
+  | "reason_required"
+  | "exceeds_balance"
+  | "overlaps";
 
 export type SubmissionResult =
   | { ok: true; minutes: number; startsAt: Date; endsAt: Date }
   | { ok: false; error: SubmissionError };
 
-/** Spec §6 — reason required, window valid, within the balance, no overlap. */
+/** The hourly window, or the one reason it is refused. */
+export function validateHourlyWindow(
+  from: string | null | undefined,
+  to: string | null | undefined,
+  cfg: AppConfig,
+): { ok: true; minutes: number } | { ok: false; error: SubmissionError } {
+  if (!from || !to || !isHm(from) || !isHm(to)) return { ok: false, error: "time_invalid" };
+  const f = hmToMinutes(from);
+  const t = hmToMinutes(to);
+  if (f >= t) return { ok: false, error: "time_order" };
+  if (f < hmToMinutes(cfg.workStart) || t > hmToMinutes(cfg.workEnd)) return { ok: false, error: "outside_work_hours" };
+  return { ok: true, minutes: t - f };
+}
+
+/** The daily range, or the one reason it is refused. */
+export function validateDailyRange(
+  startDate: string | null | undefined,
+  endDate: string | null | undefined,
+  cfg: AppConfig,
+): { ok: true; minutes: number } | { ok: false; error: SubmissionError } {
+  if (!startDate || !isIsoDate(startDate)) return { ok: false, error: "start_date_invalid" };
+  if (!endDate || !isIsoDate(endDate)) return { ok: false, error: "end_date_invalid" };
+  if (endDate < startDate) return { ok: false, error: "date_order" };
+  // Decision A25: a range that crosses 1 January is filed as two requests.
+  if (startDate.slice(0, 4) !== endDate.slice(0, 4)) return { ok: false, error: "crosses_year" };
+  // A Fri–Sat range costs 0 minutes and is still accepted (spec §6); it just spends no balance.
+  return { ok: true, minutes: dailyMinutes(startDate, endDate, cfg) };
+}
+
+/**
+ * Spec §6 — window valid, reason required, within the balance, no overlap.
+ * Checks run in the order the fields appear on the form, so the message points at the
+ * first thing the requester has to fix.
+ */
 export function validateSubmission(i: {
   input: LeaveInput;
   existing: readonly LeaveRecord[];
@@ -68,23 +117,20 @@ export function validateSubmission(i: {
   cfg: AppConfig;
 }): SubmissionResult {
   const { input, cfg } = i;
-  if (!input.reason.trim()) return { ok: false, error: "invalid_window" };
-  let minutes: number | null;
+  let window: { ok: true; minutes: number } | { ok: false; error: SubmissionError };
   if (input.kind === "hourly") {
-    minutes = input.fromTime && input.toTime ? hourlyMinutes(input.fromTime, input.toTime, cfg) : null;
+    if (!input.date || !isIsoDate(input.date)) return { ok: false, error: "date_invalid" };
+    window = validateHourlyWindow(input.fromTime, input.toTime, cfg);
   } else {
-    if (!input.startDate || !input.endDate || !isIsoDate(input.startDate) || !isIsoDate(input.endDate) || input.endDate < input.startDate) {
-      return { ok: false, error: "invalid_window" };
-    }
-    // Decision A25: a range that crosses 1 January is filed as two requests.
-    if (input.startDate.slice(0, 4) !== input.endDate.slice(0, 4)) return { ok: false, error: "invalid_window" };
-    minutes = dailyMinutes(input.startDate, input.endDate, cfg);
+    window = validateDailyRange(input.startDate, input.endDate, cfg);
   }
+  if (!window.ok) return window;
+  if (!input.reason.trim()) return { ok: false, error: "reason_required" };
   const interval = inputInterval(input);
-  if (minutes == null || !interval) return { ok: false, error: "invalid_window" };
-  if (minutes > i.remainingMinutes) return { ok: false, error: "exceeds_balance" };
+  if (!interval) return { ok: false, error: input.kind === "hourly" ? "date_invalid" : "start_date_invalid" };
+  if (window.minutes > i.remainingMinutes) return { ok: false, error: "exceeds_balance" };
   if (findOverlap(interval, i.existing)) return { ok: false, error: "overlaps" };
-  return { ok: true, minutes, ...interval };
+  return { ok: true, minutes: window.minutes, ...interval };
 }
 
 export type LeaveState = { kind: "none" } | { kind: "daily" | "hourly"; request: LeaveRecord };

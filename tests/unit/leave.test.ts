@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { dailyMinutes, findOverlap, hourlyMinutes, inputInterval, leaveOnDate, leaveStateAt, nextStatus, overlaps, validateSubmission } from "@/domain/leave";
+import { dailyMinutes, findOverlap, hourlyMinutes, inputInterval, leaveOnDate, leaveStateAt, nextStatus, overlaps, validateDailyRange, validateHourlyWindow, validateSubmission } from "@/domain/leave";
 import { annualMinutes } from "@/domain/balance";
 import { DAY, FRI, SAT, SUN, THU, at, cfg, daily, hourly } from "./fixtures";
 
@@ -86,12 +86,46 @@ describe("submission (spec §6)", () => {
     expect(r).toMatchObject({ ok: true, minutes: 0 });
   });
 
-  it("rejects an empty reason, bad windows, end before start, and ranges crossing 1 January", () => {
-    expect(validateSubmission({ input: { kind: "hourly", date: DAY, fromTime: "14:00", toTime: "16:00", reason: "  " }, existing: [], remainingMinutes: FULL, cfg })).toEqual({ ok: false, error: "invalid_window" });
-    expect(validateSubmission({ input: { kind: "hourly", date: DAY, fromTime: "16:00", toTime: "14:00", reason: "x" }, existing: [], remainingMinutes: FULL, cfg })).toEqual({ ok: false, error: "invalid_window" });
-    expect(validateSubmission({ input: { kind: "daily", startDate: SUN, endDate: THU, reason: "x" }, existing: [], remainingMinutes: FULL, cfg })).toEqual({ ok: false, error: "invalid_window" });
-    expect(validateSubmission({ input: { kind: "daily", startDate: "2026-12-30", endDate: "2027-01-03", reason: "x" }, existing: [], remainingMinutes: FULL, cfg })).toEqual({ ok: false, error: "invalid_window" });
-    expect(validateSubmission({ input: { kind: "hourly", date: "2026-02-30", fromTime: "09:00", toTime: "10:00", reason: "x" }, existing: [], remainingMinutes: FULL, cfg })).toEqual({ ok: false, error: "invalid_window" });
+  // Each refusal carries its own code so the form can point at the field that caused it
+  // (decision 2026-09-10). Same accept / reject outcomes as before, finer reasons.
+  const err = (input: Parameters<typeof validateSubmission>[0]["input"], remaining = FULL) =>
+    validateSubmission({ input, existing: [], remainingMinutes: remaining, cfg });
+
+  it("names the reason a submission is refused, one code per cause", () => {
+    const hourly = { kind: "hourly" as const, date: DAY, fromTime: "09:00", toTime: "10:00", reason: "x" };
+    const daily = { kind: "daily" as const, startDate: SUN, endDate: SUN, reason: "x" };
+
+    // hourly, in form order: date, then the window, then the reason
+    expect(err({ ...hourly, date: "" })).toEqual({ ok: false, error: "date_invalid" });
+    expect(err({ ...hourly, date: "2026-02-30" })).toEqual({ ok: false, error: "date_invalid" });
+    expect(err({ ...hourly, fromTime: "" })).toEqual({ ok: false, error: "time_invalid" });
+    expect(err({ ...hourly, toTime: "9:5" })).toEqual({ ok: false, error: "time_invalid" });
+    expect(err({ ...hourly, fromTime: "16:00", toTime: "14:00" })).toEqual({ ok: false, error: "time_order" });
+    expect(err({ ...hourly, fromTime: "10:00", toTime: "10:00" })).toEqual({ ok: false, error: "time_order" });
+    expect(err({ ...hourly, fromTime: "07:00" })).toEqual({ ok: false, error: "outside_work_hours" });
+    expect(err({ ...hourly, toTime: "17:00" })).toEqual({ ok: false, error: "outside_work_hours" });
+    expect(err({ ...hourly, reason: "  " })).toEqual({ ok: false, error: "reason_required" });
+
+    // daily
+    expect(err({ ...daily, startDate: "" })).toEqual({ ok: false, error: "start_date_invalid" });
+    expect(err({ ...daily, endDate: "2026-13-01" })).toEqual({ ok: false, error: "end_date_invalid" });
+    expect(err({ ...daily, startDate: SUN, endDate: THU })).toEqual({ ok: false, error: "date_order" });
+    expect(err({ ...daily, startDate: "2026-12-30", endDate: "2027-01-03" })).toEqual({ ok: false, error: "crosses_year" });
+    expect(err({ ...daily, reason: "" })).toEqual({ ok: false, error: "reason_required" });
+
+    // the window is judged before the balance, and the balance before the overlap
+    expect(err({ ...hourly, fromTime: "16:00", toTime: "17:00" }, 0)).toEqual({ ok: false, error: "outside_work_hours" });
+    expect(err(hourly, 0)).toEqual({ ok: false, error: "exceeds_balance" });
+  });
+
+  it("validateHourlyWindow and validateDailyRange give the same codes on their own", () => {
+    expect(validateHourlyWindow("09:00", "10:30", cfg)).toEqual({ ok: true, minutes: 90 });
+    expect(validateHourlyWindow(null, "10:00", cfg)).toEqual({ ok: false, error: "time_invalid" });
+    expect(validateHourlyWindow("10:00", "09:00", cfg)).toEqual({ ok: false, error: "time_order" });
+    expect(validateHourlyWindow("06:00", "09:00", cfg)).toEqual({ ok: false, error: "outside_work_hours" });
+    expect(validateDailyRange(SUN, SUN, cfg)).toEqual({ ok: true, minutes: 8 * 60 });
+    expect(validateDailyRange(FRI, SAT, cfg)).toEqual({ ok: true, minutes: 0 });
+    expect(validateDailyRange(SUN, THU, cfg)).toEqual({ ok: false, error: "date_order" });
   });
 });
 

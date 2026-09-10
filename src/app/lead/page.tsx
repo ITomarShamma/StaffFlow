@@ -26,6 +26,8 @@ export default async function LeadBoardPage({ searchParams }: { searchParams: Pr
           nowMs={clock.nowMs}
           multiplier={clock.multiplier}
           closeHref="/lead"
+          workStart={ctx.cfg.workStart}
+          workEnd={ctx.cfg.workEnd}
         />
       )}
     </>
