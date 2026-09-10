@@ -8,5 +8,6 @@ import { requireRole } from "@/server/session";
 export default async function ManagerBoardPage() {
   await requireRole("branch_manager");
   const ctx = await loadTeamContext();
-  return <Board board={boardFor(ctx)} clock={clockFrom(ctx.now)} lead={false} refreshMs={ctx.cfg.boardRefreshS * 1000} />;
+  // The Team Lead appears here as a tile too (decision 2026-09-10).
+  return <Board board={boardFor(ctx, { includeLead: true })} clock={clockFrom(ctx.now)} lead={false} refreshMs={ctx.cfg.boardRefreshS * 1000} />;
 }

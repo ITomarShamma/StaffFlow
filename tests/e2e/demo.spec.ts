@@ -8,7 +8,7 @@ import { SEED_USERS } from "../../prisma/seed-data";
 const PASSWORD = "Demo1234";
 const DAY = "2026-09-15"; // Tuesday — see scripts/e2e-server.mjs
 const TOMORROW = "2026-09-16";
-const dmy = (iso: string) => iso.split("-").reverse().join("/");
+const DAY_AFTER = "2026-09-17"; // Thursday
 const name = (username: string) => SEED_USERS.find((u) => u.username === username)!.nameAr;
 
 // Cast per spec §10
@@ -186,7 +186,7 @@ test("spec §10 demo script, steps 0–11", async ({ browser }) => {
   await e.page.goto("/agent/leave");
   await expect(e.page.getByTestId("balance-days")).toHaveText("14.00");
   await e.page.getByTestId("kind-hourly").click();
-  await e.page.locator('input[name="date"]').fill(dmy(DAY));
+  await e.page.locator('input[name="date"]').fill(DAY);
   await e.page.locator('input[name="from"]').fill("14:00");
   await e.page.locator('input[name="to"]').fill("16:00");
   await e.page.locator('input[name="reason"]').fill("موعد طبي");
@@ -211,8 +211,8 @@ test("spec §10 demo script, steps 0–11", async ({ browser }) => {
   const g = await login(browser, G);
   await g.page.goto("/agent/leave");
   await g.page.getByTestId("kind-daily").click();
-  await g.page.locator('input[name="startDate"]').fill(dmy(TOMORROW));
-  await g.page.locator('input[name="endDate"]').fill(dmy(TOMORROW));
+  await g.page.locator('input[name="startDate"]').fill(TOMORROW);
+  await g.page.locator('input[name="endDate"]').fill(TOMORROW);
   await g.page.locator('input[name="reason"]').fill("ظرف عائلي");
   await g.page.getByRole("button", { name: "إرسال" }).click();
   await expect(g.page.locator('[data-testid="my-request"][data-status="pending"]')).toHaveCount(1);
@@ -262,5 +262,30 @@ test("spec §10 demo script, steps 0–11", async ({ browser }) => {
   // The CSV route is a manager-only route handler
   const agentCsv = await a.context.request.get(`/manager/summary/csv?date=${DAY}`);
   expect(agentCsv.status()).toBe(403);
+
+  // ---- Team Lead leave (decision 2026-09-10): requests like an agent, decided by the manager, shown on the manager's board ----
+  await lead.goto("/lead/leave");
+  await expect(lead.getByTestId("balance-days")).toHaveText("14.00");
+  await lead.getByTestId("kind-hourly").click();
+  await lead.locator('input[name="date"]').fill(DAY_AFTER);
+  await lead.locator('input[name="from"]').fill("08:00");
+  await lead.locator('input[name="to"]').fill("12:00");
+  await lead.locator('input[name="reason"]').fill("معاملة رسمية");
+  await lead.getByRole("button", { name: "إرسال" }).click();
+  await expect(lead.locator('[data-testid="my-request"][data-status="pending"]')).toHaveCount(1);
+  await manager.goto("/manager/decisions");
+  const leadRow = manager.locator(`[data-testid="pending-row"][data-agent="${name("lead")}"]`);
+  await leadRow.getByTestId("approve").click();
+  await expect(leadRow).toHaveCount(0);
+  await lead.goto("/lead/leave");
+  await expect(lead.getByTestId("balance-days")).toHaveText("13.50");
+  await manager.goto("/manager");
+  const leadTile = manager.locator('[data-kind="team_lead"]');
+  await expect(leadTile).toHaveCount(1);
+  await expect(leadTile).toHaveAttribute("data-agent-name", name("lead"));
+  await board(lead);
+  await expect(lead.locator('[data-kind="team_lead"]')).toHaveCount(0);
+  await manager.goto("/manager/balances");
+  await expect(manager.locator(`[data-testid="balance-row"][data-agent="${name("lead")}"] [data-col="remaining"]`)).toHaveText("13.50");
   db.close();
 });

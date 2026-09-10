@@ -122,7 +122,8 @@ export function nextStatus(status: LeaveStatus, action: LeaveAction, actor: Role
     case "reject":
       return status === "pending" && actor === "branch_manager" ? "rejected" : null;
     case "cancel":
-      return status === "pending" && actor === "agent" ? "cancelled" : null;
+      // The requester cancels while pending: an agent, or the Team Lead for their own request (decision 2026-09-10).
+      return status === "pending" && (actor === "agent" || actor === "team_lead") ? "cancelled" : null;
     case "revoke":
       return status === "approved" && actor === "branch_manager" ? "revoked" : null;
   }

@@ -15,6 +15,7 @@ export const NAV: Record<Role, NavItem[]> = {
   team_lead: [
     { href: "/lead", label: ar.nav.board },
     { href: "/lead/requests", label: ar.nav.leaveRequests },
+    { href: "/lead/leave", label: ar.nav.leave },
   ],
   branch_manager: [
     { href: "/manager", label: ar.nav.board },

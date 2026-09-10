@@ -1,6 +1,7 @@
 "use client";
 
-// Spec §7.2 — new leave request. Validation happens on the server; the two Appendix A
+// Spec §7.2 — new leave request. Dates use the browser's calendar picker (decision
+// 2026-09-10); times are HH:mm. Validation happens on the server; the two Appendix A
 // messages come back as codes. Missing fields only tint the borders (design).
 
 import { useRouter } from "next/navigation";
@@ -12,7 +13,7 @@ const inputCls = (err: boolean) =>
   `h-10 px-3 border rounded bg-surface-0 text-ink w-full box-border ${err ? "border-indigo-600" : "border-line"}`;
 const labelCls = "text-[13px] font-medium text-muted";
 
-export function LeaveForm({ todayDmy }: { todayDmy: string }) {
+export function LeaveForm() {
   const [kind, setKind] = useState<"hourly" | "daily">("hourly");
   const [date, setDate] = useState("");
   const [from, setFrom] = useState("");
@@ -69,16 +70,16 @@ export function LeaveForm({ todayDmy }: { todayDmy: string }) {
         <>
           <label className="flex flex-col gap-1.5">
             <span className={labelCls}>{ar.leave.date}</span>
-            <input type="text" dir="ltr" placeholder={todayDmy} value={date} onChange={(e) => setDate(e.target.value)} className={`${inputCls(tint)} tabular-nums text-right`} name="date" />
+            <input type="date" dir="ltr" value={date} onChange={(e) => setDate(e.target.value)} className={`${inputCls(tint)} tabular-nums`} name="date" />
           </label>
           <div className="grid grid-cols-2 gap-3">
             <label className="flex flex-col gap-1.5">
               <span className={labelCls}>{ar.leave.from}</span>
-              <input type="text" inputMode="numeric" placeholder="HH:mm" maxLength={5} dir="ltr" value={from} onChange={(e) => setFrom(e.target.value)} className={inputCls(tint)} name="from" />
+              <input type="text" inputMode="numeric" placeholder="HH:mm" maxLength={5} dir="ltr" value={from} onChange={(e) => setFrom(e.target.value)} className={`${inputCls(tint)} tabular-nums`} name="from" />
             </label>
             <label className="flex flex-col gap-1.5">
               <span className={labelCls}>{ar.leave.to}</span>
-              <input type="text" inputMode="numeric" placeholder="HH:mm" maxLength={5} dir="ltr" value={to} onChange={(e) => setTo(e.target.value)} className={inputCls(tint)} name="to" />
+              <input type="text" inputMode="numeric" placeholder="HH:mm" maxLength={5} dir="ltr" value={to} onChange={(e) => setTo(e.target.value)} className={`${inputCls(tint)} tabular-nums`} name="to" />
             </label>
           </div>
         </>
@@ -86,11 +87,11 @@ export function LeaveForm({ todayDmy }: { todayDmy: string }) {
         <div className="grid grid-cols-2 gap-3">
           <label className="flex flex-col gap-1.5">
             <span className={labelCls}>{ar.leave.startDate}</span>
-            <input type="text" dir="ltr" placeholder={todayDmy} value={startDate} onChange={(e) => setStartDate(e.target.value)} className={`${inputCls(tint)} tabular-nums text-right`} name="startDate" />
+            <input type="date" dir="ltr" value={startDate} onChange={(e) => setStartDate(e.target.value)} className={`${inputCls(tint)} tabular-nums`} name="startDate" />
           </label>
           <label className="flex flex-col gap-1.5">
             <span className={labelCls}>{ar.leave.endDate}</span>
-            <input type="text" dir="ltr" placeholder={todayDmy} value={endDate} onChange={(e) => setEndDate(e.target.value)} className={`${inputCls(tint)} tabular-nums text-right`} name="endDate" />
+            <input type="date" dir="ltr" value={endDate} min={startDate || undefined} onChange={(e) => setEndDate(e.target.value)} className={`${inputCls(tint)} tabular-nums`} name="endDate" />
           </label>
         </div>
       )}

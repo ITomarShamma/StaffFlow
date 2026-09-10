@@ -23,6 +23,8 @@ export interface TeamContext {
   types: BreakTypeConfig[];
   team: { id: string; caps: TeamCaps };
   agents: AppUser[];
+  /** The active Team Lead — requests leave and appears on the Branch Manager's board (decision 2026-09-10). */
+  lead: AppUser | null;
   usersById: Map<string, AgentRef>;
   openSessions: SessionRecord[];
   todaySessions: SessionRecord[];
@@ -39,16 +41,18 @@ export async function loadTeamContext(now?: Date, opts: { locked?: boolean } = {
   if (opts.locked) await sweepUnlocked(at);
   else await runSweep(at);
   const day = localDayBounds(at);
-  const [cfg, types, team, agentRows, openRows, todayRows, leaveRows] = await Promise.all([
+  const [cfg, types, team, agentRows, leadRow, openRows, todayRows, leaveRows] = await Promise.all([
     loadConfig(),
     loadBreakTypes(),
     loadTeam(),
     prisma.user.findMany({ where: { role: "agent", active: true }, orderBy: { username: "asc" } }),
+    prisma.user.findFirst({ where: { role: "team_lead", active: true }, orderBy: { username: "asc" } }),
     prisma.breakSession.findMany({ where: { endedAt: null, voided: false } }),
     prisma.breakSession.findMany({ where: { startedAt: { gte: day.start, lt: day.end } }, orderBy: { startedAt: "asc" } }),
     prisma.leaveRequest.findMany({ where: { status: "approved", startsAt: { lt: day.end }, endsAt: { gt: day.start } } }),
   ]);
   const agents = agentRows.map(toUser);
+  const lead = leadRow ? toUser(leadRow) : null;
   return {
     now: at,
     day,
@@ -56,7 +60,8 @@ export async function loadTeamContext(now?: Date, opts: { locked?: boolean } = {
     types,
     team,
     agents,
-    usersById: new Map(agents.map((a) => [a.id, toAgentRef(a)])),
+    lead,
+    usersById: new Map([...agents, ...(lead ? [lead] : [])].map((a) => [a.id, toAgentRef(a)])),
     openSessions: openRows.map(toSession),
     todaySessions: todayRows.map(toSession),
     leave: leaveRows.map(toLeave),
@@ -74,6 +79,7 @@ export interface TimerVM {
 export interface TileVM {
   userId: string;
   name: string;
+  kind: "agent" | "team_lead";
   status: AgentStatus;
   timer: TimerVM | null;
   budgetUsed: number;
@@ -113,6 +119,7 @@ export function tileFor(ctx: TeamContext, agent: AppUser): TileVM {
   return {
     userId: agent.id,
     name: agent.nameAr,
+    kind: agent.role === "team_lead" ? "team_lead" : "agent",
     status,
     timer: open && status !== "on_leave" ? timerFor(open, ctx.types) : null,
     budgetUsed: budgetUsedDisplay(used, ctx.cfg),
@@ -130,9 +137,10 @@ export interface BoardVM {
   nowMs: number;
 }
 
-export function boardFor(ctx: TeamContext): BoardVM {
+export function boardFor(ctx: TeamContext, opts: { includeLead?: boolean } = {}): BoardVM {
+  const people = opts.includeLead && ctx.lead ? [ctx.lead, ...ctx.agents] : ctx.agents;
   return {
-    tiles: ctx.agents.map((a) => tileFor(ctx, a)),
+    tiles: people.map((a) => tileFor(ctx, a)),
     pools: poolCounts(ctx.openSessions, ctx.usersById, ctx.types, ctx.team.caps),
     capGeneral: ctx.team.caps.capGeneral,
     nowMs: ctx.now.getTime(),
@@ -224,7 +232,7 @@ async function leaveRows(where: { userId?: string; status?: string | { in: strin
   const [cfg, rows, users] = await Promise.all([
     loadConfig(),
     prisma.leaveRequest.findMany({ where, orderBy: { createdAt: "desc" } }),
-    prisma.user.findMany({ where: { role: "agent" } }),
+    prisma.user.findMany({ where: { role: { in: ["agent", "team_lead"] } } }),
   ]);
   const names = new Map(users.map((u) => [u.id, u.nameAr]));
   const userIds = [...new Set(rows.map((r) => r.userId))];
@@ -299,10 +307,13 @@ export interface BalanceRowVM {
   usedPct: number;
 }
 
+const LEAVE_TAKERS = { role: { in: ["agent", "team_lead"] }, active: true };
+const PEOPLE_ORDER = [{ role: "asc" as const }, { username: "asc" as const }];
+
 export async function balancesFor(year: number): Promise<BalanceRowVM[]> {
   const [cfg, agents, approved] = await Promise.all([
     loadConfig(),
-    prisma.user.findMany({ where: { role: "agent", active: true }, orderBy: { username: "asc" } }),
+    prisma.user.findMany({ where: LEAVE_TAKERS, orderBy: PEOPLE_ORDER }),
     prisma.leaveRequest.findMany({ where: { status: "approved" } }),
   ]);
   const all = approved.map(toLeave);
@@ -327,7 +338,7 @@ export async function summaryFor(date: string): Promise<SummaryRow[]> {
   const [cfg, types, agents, sessions, leave] = await Promise.all([
     loadConfig(),
     loadBreakTypes(),
-    prisma.user.findMany({ where: { role: "agent", active: true }, orderBy: { username: "asc" } }),
+    prisma.user.findMany({ where: LEAVE_TAKERS, orderBy: PEOPLE_ORDER }),
     prisma.breakSession.findMany({ where: { startedAt: { gte: start.start, lt: start.end } } }),
     prisma.leaveRequest.findMany({ where: { status: "approved", startsAt: { lt: start.end }, endsAt: { gt: start.start } } }),
   ]);

@@ -1,5 +1,6 @@
 // Spec §7.3 / §7.6 — the live board: header card with pool meters (+ cap control for the
-// Team Lead), then 12 tiles in a 4×3 grid. Polls every board_refresh_s.
+// Team Lead), then one tile per person in a 4-column grid that fills the viewport
+// (12 agents = 4×3; the manager's board adds the Team Lead's tile). Polls every board_refresh_s.
 
 import { ar } from "@/i18n/ar";
 import type { ClockInfo } from "@/server/clock";
@@ -10,6 +11,7 @@ import { CapControl } from "./CapControl";
 import { PoolMeter } from "./PoolMeter";
 
 export function Board({ board, clock, lead, refreshMs }: { board: BoardVM; clock: ClockInfo; lead: boolean; refreshMs: number }) {
+  const rows = Math.max(3, Math.ceil(board.tiles.length / 4));
   return (
     <div className="flex-1 min-h-0 h-[calc(100vh-56px)] flex flex-col gap-4 px-8 py-6 box-border">
       <BoardRefresher everyMs={refreshMs} />
@@ -20,9 +22,15 @@ export function Board({ board, clock, lead, refreshMs }: { board: BoardVM; clock
         <PoolMeter label={ar.breaks.toiletMen} active={board.pools.toilet_male.active} cap={board.pools.toilet_male.cap} testId="pool-toilet-m" />
         {lead && <CapControl cap={board.capGeneral} />}
       </div>
-      <div className="flex-1 min-h-0 grid grid-cols-4 grid-rows-3 gap-4">
+      <div className="flex-1 min-h-0 grid grid-cols-4 gap-4" style={{ gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))` }}>
         {board.tiles.map((t) => (
-          <AgentTile key={t.userId} tile={t} nowMs={clock.nowMs} multiplier={clock.multiplier} href={lead ? `/lead?agent=${t.userId}` : undefined} />
+          <AgentTile
+            key={t.userId}
+            tile={t}
+            nowMs={clock.nowMs}
+            multiplier={clock.multiplier}
+            href={lead && t.kind === "agent" ? `/lead?agent=${t.userId}` : undefined}
+          />
         ))}
       </div>
     </div>

@@ -30,3 +30,6 @@ design handoff arrived; say so if any should change.
 | 2026-09-09 | Prisma 7 | `prisma-client` generator into `src/generated/prisma` (git-ignored, regenerated on install) with the better-sqlite3 driver adapter; `prisma.config.ts` holds the datasource and the seed command. |
 | 2026-09-09 | Service host | NSSM rather than pm2 (see `docs/DEPLOY.md` §3). |
 | 2026-09-09 | Demo-day pitfall | If the demo runs on a Thursday, "daily leave for tomorrow" is a Friday and costs 0; the e2e pins a Tuesday. |
+| 2026-09-10 | Team Lead and leave (user) | The Team Lead requests leave like an agent (`/lead/leave`, same balance rule, same Branch Manager decision), may cancel their own pending request, and appears as a tile on the **Branch Manager's** board only, marked «مشرف», with no break budget. Balances and the daily summary list agents first, then the Team Lead. The Team Lead still takes no breaks (spec §3). |
+| 2026-09-10 | Date fields (user) | Leave dates and the summary date use the browser's calendar picker (`<input type="date">`, ISO values) instead of the design's dd/mm/yyyy text fields. Times stay HH:mm text. |
+| 2026-09-10 | e2e server | The Playwright run serves a production build (`next build` + `next start` on port 3100) so it can run while `npm run demo` is open in another terminal. |

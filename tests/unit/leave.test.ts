@@ -117,7 +117,7 @@ describe("board effect and reporting", () => {
 });
 
 describe("lifecycle", () => {
-  it("only the Branch Manager decides pending requests and revokes approved ones; the agent cancels pending; the Team Lead does nothing", () => {
+  it("only the Branch Manager decides pending requests and revokes approved ones; the requester (agent or Team Lead) cancels pending", () => {
     expect(nextStatus("pending", "approve", "branch_manager")).toBe("approved");
     expect(nextStatus("pending", "reject", "branch_manager")).toBe("rejected");
     expect(nextStatus("pending", "cancel", "agent")).toBe("cancelled");
@@ -126,7 +126,9 @@ describe("lifecycle", () => {
     expect(nextStatus("approved", "approve", "branch_manager")).toBeNull();
     expect(nextStatus("pending", "revoke", "branch_manager")).toBeNull();
     expect(nextStatus("pending", "approve", "team_lead")).toBeNull();
-    expect(nextStatus("pending", "cancel", "team_lead")).toBeNull();
+    expect(nextStatus("pending", "cancel", "team_lead")).toBe("cancelled");
+    expect(nextStatus("approved", "cancel", "team_lead")).toBeNull();
+    expect(nextStatus("pending", "reject", "team_lead")).toBeNull();
     expect(nextStatus("rejected", "approve", "branch_manager")).toBeNull();
   });
 });
