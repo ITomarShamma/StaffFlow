@@ -68,6 +68,8 @@ export type SubmissionError =
   | "end_date_invalid"
   | "date_order"
   | "crosses_year"
+  | "date_past"
+  | "start_date_past"
   | "reason_required"
   | "exceeds_balance"
   | "overlaps";
@@ -95,9 +97,12 @@ export function validateDailyRange(
   startDate: string | null | undefined,
   endDate: string | null | undefined,
   cfg: AppConfig,
+  /** Today in Asia/Damascus; a range may not begin before it (decision 2026-09-10). */
+  today?: string,
 ): { ok: true; minutes: number } | { ok: false; error: SubmissionError } {
   if (!startDate || !isIsoDate(startDate)) return { ok: false, error: "start_date_invalid" };
   if (!endDate || !isIsoDate(endDate)) return { ok: false, error: "end_date_invalid" };
+  if (today && startDate < today) return { ok: false, error: "start_date_past" };
   if (endDate < startDate) return { ok: false, error: "date_order" };
   // Decision A25: a range that crosses 1 January is filed as two requests.
   if (startDate.slice(0, 4) !== endDate.slice(0, 4)) return { ok: false, error: "crosses_year" };
@@ -115,14 +120,17 @@ export function validateSubmission(i: {
   existing: readonly LeaveRecord[];
   remainingMinutes: number;
   cfg: AppConfig;
+  /** Today in Asia/Damascus. Leave is requested ahead, never backdated (decision 2026-09-10). */
+  today?: string;
 }): SubmissionResult {
-  const { input, cfg } = i;
+  const { input, cfg, today } = i;
   let window: { ok: true; minutes: number } | { ok: false; error: SubmissionError };
   if (input.kind === "hourly") {
     if (!input.date || !isIsoDate(input.date)) return { ok: false, error: "date_invalid" };
+    if (today && input.date < today) return { ok: false, error: "date_past" };
     window = validateHourlyWindow(input.fromTime, input.toTime, cfg);
   } else {
-    window = validateDailyRange(input.startDate, input.endDate, cfg);
+    window = validateDailyRange(input.startDate, input.endDate, cfg, today);
   }
   if (!window.ok) return window;
   if (!input.reason.trim()) return { ok: false, error: "reason_required" };

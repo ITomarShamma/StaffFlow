@@ -45,8 +45,8 @@ model User {
 }
 
 model BreakType {
-  code               String  @id // smoke | prayer | meal | toilet
-  pool               String // general | toilet
+  code               String  @id // smoke | prayer | meal | toilet | call
+  pool               String // general | toilet | none
   maxMin             Int? // null for toilet
   graceMin           Int?
   autoEndAtMin       Int // toilet: stale threshold

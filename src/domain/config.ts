@@ -17,6 +17,7 @@ const schema = z.object({
   leave_year_start: z.string().regex(/^\d{2}-\d{2}$/),
   board_refresh_s: z.coerce.number().int().positive(),
   correction_window_days: z.coerce.number().int().nonnegative(),
+  min_session_s: z.coerce.number().int().nonnegative(),
 });
 
 export function parseConfig(rows: Record<string, string>): AppConfig {
@@ -31,5 +32,6 @@ export function parseConfig(rows: Record<string, string>): AppConfig {
     leaveYearStart: c.leave_year_start,
     boardRefreshS: c.board_refresh_s,
     correctionWindowDays: c.correction_window_days,
+    minSessionS: c.min_session_s,
   };
 }

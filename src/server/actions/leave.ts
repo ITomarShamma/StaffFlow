@@ -52,7 +52,8 @@ export async function submitLeave(raw: unknown): Promise<ActionResult<SubmitLeav
       // A date that is not a real one fails validation below; until then count against this year.
       const year = isIsoDate(dateForYear) ? yearOf(dateForYear) : yearOf(localParts(now).date);
       const remaining = remainingMinutes(cfg, mine, year);
-      const r = validateSubmission({ input, existing: mine, remainingMinutes: remaining, cfg });
+      // "Today" is the server's, never the client's (CLAUDE.md rule 3).
+      const r = validateSubmission({ input, existing: mine, remainingMinutes: remaining, cfg, today: localParts(now).date });
       if (!r.ok) return { ok: false, error: r.error };
       await prisma.leaveRequest.create({
         data: {

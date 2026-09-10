@@ -31,6 +31,10 @@ function explain(error: SubmitLeaveError, workStart: string, workEnd: string): {
       return { field: "endDate", message: e.endDateInvalid };
     case "date_order":
       return { field: "endDate", message: e.dateOrder };
+    case "date_past":
+      return { field: "date", message: e.datePast };
+    case "start_date_past":
+      return { field: "startDate", message: e.startDatePast };
     case "crosses_year":
       return { field: "range", message: e.crossesYear };
     case "reason_required":
@@ -59,7 +63,7 @@ function FieldError({ message }: { message: string }) {
   );
 }
 
-export function LeaveForm({ workStart, workEnd }: { workStart: string; workEnd: string }) {
+export function LeaveForm({ workStart, workEnd, today }: { workStart: string; workEnd: string; today: string }) {
   const [kind, setKind] = useState<"hourly" | "daily">("hourly");
   const [date, setDate] = useState("");
   const [from, setFrom] = useState("");
@@ -129,6 +133,7 @@ export function LeaveForm({ workStart, workEnd }: { workStart: string; workEnd: 
               type="date"
               dir="ltr"
               value={date}
+              min={today}
               onChange={(e) => setDate(e.target.value)}
               className={`${inputCls(at("date") !== null)} tabular-nums`}
               name="date"
@@ -158,6 +163,7 @@ export function LeaveForm({ workStart, workEnd }: { workStart: string; workEnd: 
                 type="date"
                 dir="ltr"
                 value={startDate}
+                min={today}
                 onChange={(e) => setStartDate(e.target.value)}
                 className={`${inputCls(at("startDate") !== null || at("range") !== null)} tabular-nums`}
                 name="startDate"
@@ -170,7 +176,7 @@ export function LeaveForm({ workStart, workEnd }: { workStart: string; workEnd: 
                 type="date"
                 dir="ltr"
                 value={endDate}
-                min={startDate || undefined}
+                min={startDate || today}
                 onChange={(e) => setEndDate(e.target.value)}
                 className={`${inputCls(at("endDate") !== null || at("range") !== null)} tabular-nums`}
                 name="endDate"

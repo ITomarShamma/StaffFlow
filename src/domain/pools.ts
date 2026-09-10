@@ -8,7 +8,9 @@ export const POOLS: readonly Pool[] = ["general", "toilet_female", "toilet_male"
 
 export type PoolCounts = Record<Pool, { active: number; cap: number }>;
 
-export function resolvePool(type: BreakTypeConfig, gender: Gender): Pool {
+/** null = the type occupies no pool, so concurrency is unlimited (call break). */
+export function resolvePool(type: BreakTypeConfig, gender: Gender): Pool | null {
+  if (type.pool === "none") return null;
   if (type.pool === "general") return "general";
   return gender === "female" ? "toilet_female" : "toilet_male";
 }
@@ -39,7 +41,8 @@ export function poolCounts(
     if (s.voided || s.endedAt) continue;
     const user = usersById.get(s.userId);
     if (!user) throw new Error(`open session ${s.id} belongs to unknown user ${s.userId}`);
-    counts[resolvePool(typeByCode(types, s.typeCode), user.gender)].active++;
+    const pool = resolvePool(typeByCode(types, s.typeCode), user.gender);
+    if (pool) counts[pool].active++;
   }
   return counts;
 }

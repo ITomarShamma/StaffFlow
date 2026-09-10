@@ -4,14 +4,14 @@ import { z } from "zod";
 import type { BreakSession, BreakType, LeaveRequest, Team, User } from "@/generated/prisma/client";
 import type { AgentRef, BreakTypeConfig, LeaveRecord, SessionRecord, TeamCaps } from "@/domain/types";
 
-const breakCode = z.enum(["smoke", "prayer", "meal", "toilet"]);
+const breakCode = z.enum(["smoke", "prayer", "meal", "toilet", "call"]);
 const endedBy = z.enum(["agent", "system", "team_lead"]).nullable();
 const endReason = z.enum(["auto_end", "stale", "end_of_day"]).nullable();
 const leaveKind = z.enum(["hourly", "daily"]);
 const leaveStatus = z.enum(["pending", "approved", "rejected", "cancelled", "revoked"]);
 const gender = z.enum(["male", "female"]);
 const role = z.enum(["agent", "team_lead", "branch_manager"]);
-const pool = z.enum(["general", "toilet"]);
+const pool = z.enum(["general", "toilet", "none"]);
 
 export function toSession(r: BreakSession): SessionRecord {
   return {

@@ -1,6 +1,6 @@
 // Spec §9 — per agent, per day metrics, and the CSV.
 
-import { budgetUsedDisplay, chargedMinutes } from "./budget";
+import { budgetUsedDisplay, chargedMinutes, countable } from "./budget";
 import { leaveOnDate } from "./leave";
 import { isOverrun } from "./sessions";
 import type { AppConfig, BreakTypeConfig, LeaveRecord, SessionRecord } from "./types";
@@ -15,6 +15,7 @@ export interface SummaryRow {
   prayer: { count: number; minutes: number };
   meal: { count: number; minutes: number };
   toiletCount: number;
+  callCount: number;
   overruns: number;
   autoEnded: number;
   edited: number;
@@ -35,7 +36,7 @@ export interface SummaryInput {
 
 export function dailySummary(i: SummaryInput): SummaryRow[] {
   return i.agents.map((agent) => {
-    const all = i.sessions.filter((s) => s.userId === agent.id);
+    const all = countable(i.sessions, i.cfg).filter((s) => s.userId === agent.id);
     const live = all.filter((s) => !s.voided);
     const byType = (code: "smoke" | "prayer" | "meal") => {
       const type = typeByCode(i.types, code);
@@ -55,6 +56,7 @@ export function dailySummary(i: SummaryInput): SummaryRow[] {
       prayer,
       meal,
       toiletCount: live.filter((s) => s.typeCode === "toilet").length,
+      callCount: live.filter((s) => s.typeCode === "call").length,
       overruns: live.filter((s) => isOverrun(s, typeByCode(i.types, s.typeCode), i.now)).length,
       // ended_by = system, stale excluded (§9) — the 16:00 close counts (decision A9)
       autoEnded: live.filter((s) => s.endedBy === "system" && !s.stale).length,
@@ -86,6 +88,7 @@ export function summaryCsv(headers: readonly string[], rows: readonly SummaryRow
         r.meal.count,
         r.meal.minutes,
         r.toiletCount,
+        r.callCount,
         r.overruns,
         r.autoEnded,
         r.edited,

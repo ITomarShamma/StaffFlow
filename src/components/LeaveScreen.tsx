@@ -1,14 +1,16 @@
 // Spec §7.2 — remaining balance, new request, my requests. Shared by the agent and the
 // Team Lead (decision 2026-09-10: the Team Lead requests leave too).
 
+import { localParts } from "@/domain/tz";
 import { ar } from "@/i18n/ar";
+import { serverNow } from "@/server/clock";
 import { loadConfig } from "@/server/config";
 import { myLeave } from "@/server/queries";
 import { LeaveForm } from "./LeaveForm";
 import { MyRequestsTable } from "./LeaveTables";
 
 export async function LeaveScreen({ userId }: { userId: string }) {
-  const [mine, cfg] = await Promise.all([myLeave(userId), loadConfig()]);
+  const [mine, cfg, now] = await Promise.all([myLeave(userId), loadConfig(), serverNow()]);
   return (
     <div className="flex-1 min-h-0 px-8 py-6 flex flex-col gap-4 overflow-auto box-border">
       <h1 className="m-0 text-2xl font-semibold">{ar.nav.leave}</h1>
@@ -23,7 +25,7 @@ export async function LeaveScreen({ userId }: { userId: string }) {
               {ar.table.day}
             </span>
           </div>
-          <LeaveForm workStart={cfg.workStart} workEnd={cfg.workEnd} />
+          <LeaveForm workStart={cfg.workStart} workEnd={cfg.workEnd} today={localParts(now).date} />
         </div>
         <MyRequestsTable rows={mine.rows} />
       </div>

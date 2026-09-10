@@ -100,7 +100,7 @@ describe("button labels (spec §5.3 step 3 + design)", () => {
       session({ userId: "m1", typeCode: "prayer", startedAt: at("09:00"), endedAt: at("09:10") }),
     ];
     const { type: _t, ...rest } = ctx({ agentTodaySessions: today });
-    expect(buttonStates(rest)).toEqual({ smoke: "unavailable", prayer: "unavailable", meal: "unavailable", toilet: "available" });
+    expect(buttonStates(rest)).toEqual({ smoke: "unavailable", prayer: "unavailable", meal: "unavailable", toilet: "available", call: "available" });
   });
 });
 

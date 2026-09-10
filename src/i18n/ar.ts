@@ -43,6 +43,7 @@ export const ar = {
     prayer: "استراحة صلاة",
     meal: "استراحة طعام",
     toilet: "دورة مياه",
+    call: "مكالمة هاتفية", // TODO-COPY 5th break type (decision 2026-09-10); not in Appendix A
     backOnFloor: "عودة إلى العمل",
     busy: "مشغول — حاول بعد قليل",
     unavailable: "غير متاح اليوم",
@@ -119,6 +120,7 @@ export const ar = {
       prayer: "صلاة",
       meal: "طعام",
       toilet: "دورة مياه",
+      call: "مكالمات", // TODO-COPY 5th break type column (decision 2026-09-10)
       leave: "الإجازة",
     },
     csvHeaders: [
@@ -131,6 +133,7 @@ export const ar = {
       "طعام — العدد",
       "طعام — الدقائق",
       "دورة مياه — العدد",
+      "مكالمات — العدد",
       "التجاوزات",
       "إنهاء تلقائي",
       "معدّل",
@@ -167,6 +170,8 @@ export const ar = {
       startDateInvalid: "اختر تاريخ البداية", // TODO-COPY
       endDateInvalid: "اختر تاريخ النهاية", // TODO-COPY
       dateOrder: "تاريخ النهاية قبل تاريخ البداية", // TODO-COPY
+      datePast: "لا يمكن طلب إجازة عن تاريخ مضى", // TODO-COPY decision 2026-09-10
+      startDatePast: "لا يمكن أن تبدأ الإجازة قبل اليوم", // TODO-COPY decision 2026-09-10
       crossesYear: "لا يمكن أن يمتد الطلب على سنتين — قدّم طلبين منفصلين", // TODO-COPY decision A25
       reasonRequired: "السبب مطلوب", // TODO-COPY spec §6 requires a reason
       reasonTooLong: "السبب طويل جداً", // TODO-COPY over 200 characters

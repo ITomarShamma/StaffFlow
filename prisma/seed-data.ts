@@ -20,6 +20,9 @@ export const SEED_BREAK_TYPES: BreakTypeConfig[] = [
   { code: "prayer", pool: "general", maxMin: 10, graceMin: 2, autoEndAtMin: 20, allowancePerDay: 1, countsTowardBudget: true, sortOrder: 2 },
   { code: "meal", pool: "general", maxMin: 15, graceMin: 2, autoEndAtMin: 25, allowancePerDay: 1, countsTowardBudget: true, sortOrder: 3 },
   { code: "toilet", pool: "toilet", maxMin: null, graceMin: null, autoEndAtMin: 20, allowancePerDay: null, countsTowardBudget: false, sortOrder: 4 },
+  // Decision 2026-09-10: a work call is not rest — no cap, no maximum, no daily limit and
+  // outside the budget; the system closes a forgotten one after 10 minutes.
+  { code: "call", pool: "none", maxMin: null, graceMin: null, autoEndAtMin: 10, allowancePerDay: null, countsTowardBudget: false, sortOrder: 5 },
 ];
 
 /** Spec §12 — Config table rows (all values are strings in the table). */
@@ -33,6 +36,7 @@ export const SEED_CONFIG: Record<string, string> = {
   leave_year_start: "01-01",
   board_refresh_s: "5",
   correction_window_days: "7",
+  min_session_s: "15", // breaks shorter than this are mis-clicks and count for nothing
   demo_clock_multiplier: "10",
 };
 

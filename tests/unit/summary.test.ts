@@ -62,7 +62,7 @@ describe("daily summary (spec §9, demo step 11)", () => {
     const csv = summaryCsv(["الموظف", "الرصيد المستخدم"], rows, formatHours);
     const lines = csv.split("\r\n");
     expect(lines[0]).toBe("الموظف,الرصيد المستخدم");
-    expect(lines[1]).toBe('"عمر ""أبو علي"" شمه, مدير",0/25,0,0,0,0,0,0,0,0,0,0,2,0');
+    expect(lines[1]).toBe('"عمر ""أبو علي"" شمه, مدير",0/25,0,0,0,0,0,0,0,0,0,0,0,2,0');
     expect(csv.endsWith("\r\n")).toBe(true);
     expect(formatHours(90)).toBe("1.5");
     expect(formatHours(15)).toBe("0.25");

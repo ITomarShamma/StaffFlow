@@ -1,7 +1,7 @@
 // Reads. Every read that touches sessions runs the sweep first (CLAUDE.md rule 9).
 
 import { formatDays, remainingMinutes } from "@/domain/balance";
-import { budgetUsedDisplay, usedToday } from "@/domain/budget";
+import { budgetUsedDisplay, countable, usedToday } from "@/domain/budget";
 import { usedCount } from "@/domain/allowances";
 import { leaveStateAt, requestDate } from "@/domain/leave";
 import { poolCounts, type PoolCounts } from "@/domain/pools";
@@ -97,7 +97,8 @@ export function timerFor(s: SessionRecord, types: BreakTypeConfig[]): TimerVM {
 }
 
 export function tileFor(ctx: TeamContext, agent: AppUser): TileVM {
-  const mine = ctx.todaySessions.filter((s) => s.userId === agent.id);
+  // A break under the safety threshold was a mis-click: it never reaches the board.
+  const mine = countable(ctx.todaySessions, ctx.cfg).filter((s) => s.userId === agent.id);
   const open = openSessionOf(agent.id, ctx.openSessions);
   const leave = ctx.leave.filter((r) => r.userId === agent.id);
   const status = agentStatus({ now: ctx.now, openSession: open, types: ctx.types, approvedLeave: leave });
@@ -185,7 +186,8 @@ export interface CorrectionRowVM {
 }
 
 export function correctionRowsFor(ctx: TeamContext, agentId: string): { rows: CorrectionRowVM[]; budgetUsed: number } {
-  const mine = ctx.todaySessions.filter((s) => s.userId === agentId);
+  // Mis-clicks are not corrections waiting to happen; they are nothing at all.
+  const mine = countable(ctx.todaySessions, ctx.cfg).filter((s) => s.userId === agentId);
   const rows = mine.map((s): CorrectionRowVM => {
     const type = typeByCode(ctx.types, s.typeCode);
     const flags: CorrectionRowVM["flags"] = [];

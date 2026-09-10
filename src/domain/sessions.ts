@@ -1,7 +1,7 @@
 // Spec §5.3–§5.4 — starting, ending, overrun and status of break sessions.
 
 import { allowanceLeft } from "./allowances";
-import { durationSeconds, effectiveMax, remainingBudget, roundMinutes, usedToday } from "./budget";
+import { countable, durationSeconds, effectiveMax, remainingBudget, roundMinutes, usedToday } from "./budget";
 import { leaveStateAt } from "./leave";
 import { hasFreeSlot, poolCounts, resolvePool } from "./pools";
 import { isWithinWorkHours } from "./tz";
@@ -37,7 +37,7 @@ export interface StartContext {
 }
 
 export type StartDecision =
-  | { ok: true; pool: Pool; effectiveMaxMin: number | null }
+  | { ok: true; pool: Pool | null; effectiveMaxMin: number | null }
   | { ok: false; reason: Refusal };
 
 /** Spec §5.3 step 2 — the checks, in order; the first failure is the reason. */
@@ -46,11 +46,13 @@ export function canStart(ctx: StartContext): StartDecision {
   if (!isWithinWorkHours(now, cfg)) return { ok: false, reason: "outside_hours" };
   if (openSessionOf(agent.id, ctx.teamOpenSessions)) return { ok: false, reason: "not_on_floor" };
   if (leaveStateAt(ctx.agentApprovedLeave, now).kind !== "none") return { ok: false, reason: "on_leave" };
-  if (!allowanceLeft(type, ctx.agentTodaySessions)) return { ok: false, reason: "allowance_used" };
-  const remaining = remainingBudget(cfg, usedToday(ctx.agentTodaySessions, ctx.types, now));
+  // A mis-click never happened, so it costs neither an allowance nor a minute.
+  const today = countable(ctx.agentTodaySessions, cfg);
+  if (!allowanceLeft(type, today)) return { ok: false, reason: "allowance_used" };
+  const remaining = remainingBudget(cfg, usedToday(today, ctx.types, now));
   if (type.countsTowardBudget && remaining <= 0) return { ok: false, reason: "budget_exhausted" };
   const pool = resolvePool(type, agent.gender);
-  if (!hasFreeSlot(pool, poolCounts(ctx.teamOpenSessions, ctx.usersById, ctx.types, ctx.team))) {
+  if (pool && !hasFreeSlot(pool, poolCounts(ctx.teamOpenSessions, ctx.usersById, ctx.types, ctx.team))) {
     return { ok: false, reason: "pool_full" };
   }
   return { ok: true, pool, effectiveMaxMin: effectiveMax(type, remaining) };

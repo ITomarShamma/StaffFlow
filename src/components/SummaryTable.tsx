@@ -47,6 +47,9 @@ export function SummaryTable({ rows }: { rows: SummaryRow[] }) {
             <th className={`${th} ${group}`}>
               <Two a={s.toilet} b={ar.table.count} />
             </th>
+            <th className={`${th} ${group}`}>
+              <Two a={s.call} b={ar.table.count} />
+            </th>
             <th className={`${th} ${group} font-semibold`}>{ar.table.overruns}</th>
             <th className={`${th} font-semibold`}>{ar.breaks.autoEnded}</th>
             <th className={`${th} font-semibold`}>{ar.breaks.edited}</th>
@@ -72,6 +75,7 @@ export function SummaryTable({ rows }: { rows: SummaryRow[] }) {
               <td className={`${td} ${group}`} data-col="meal-n">{r.meal.count}</td>
               <td className={td} data-col="meal-min">{r.meal.minutes}</td>
               <td className={`${td} ${group}`} data-col="toilet-n">{r.toiletCount}</td>
+              <td className={`${td} ${group}`} data-col="call-n">{r.callCount}</td>
               <td className={`${td} ${group}`} data-col="overruns">{r.overruns}</td>
               <td className={td} data-col="auto">{r.autoEnded}</td>
               <td className={td} data-col="edited">{r.edited}</td>

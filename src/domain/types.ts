@@ -2,8 +2,9 @@
 
 export type Role = "agent" | "team_lead" | "branch_manager";
 export type Gender = "male" | "female";
-export type BreakTypeCode = "smoke" | "prayer" | "meal" | "toilet";
-export type PoolKind = "general" | "toilet";
+export type BreakTypeCode = "smoke" | "prayer" | "meal" | "toilet" | "call";
+/** "none" = unlimited concurrency: the break occupies no pool slot (call, decision 2026-09-10). */
+export type PoolKind = "general" | "toilet" | "none";
 export type Pool = "general" | "toilet_female" | "toilet_male";
 export type EndedBy = "agent" | "system" | "team_lead";
 export type EndReason = "auto_end" | "stale" | "end_of_day";
@@ -13,7 +14,7 @@ export type AgentStatus = "on_floor" | "on_break" | "overrun" | "away" | "on_lea
 
 export const ROLES: Role[] = ["agent", "team_lead", "branch_manager"];
 export const GENDERS: Gender[] = ["male", "female"];
-export const BREAK_TYPE_CODES: BreakTypeCode[] = ["smoke", "prayer", "meal", "toilet"];
+export const BREAK_TYPE_CODES: BreakTypeCode[] = ["smoke", "prayer", "meal", "toilet", "call"];
 export const LEAVE_STATUSES: LeaveStatus[] = ["pending", "approved", "rejected", "cancelled", "revoked"];
 
 /** One row of spec §5.1, read from the BreakType table. */
@@ -46,6 +47,8 @@ export interface AppConfig {
   leaveYearStart: string; // "MM-DD"
   boardRefreshS: number;
   correctionWindowDays: number;
+  /** Breaks shorter than this many seconds are mis-clicks and count for nothing. */
+  minSessionS: number;
 }
 
 export interface AgentRef {

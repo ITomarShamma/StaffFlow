@@ -16,6 +16,22 @@ export function roundMinutes(seconds: number): number {
   return Math.max(1, Math.round(seconds / 60));
 }
 
+/**
+ * A break shorter than the safety threshold was a mis-click, not a break: it counts for
+ * nothing — no budget, no allowance, no counter, no report line (config min_session_s).
+ * Only an ended session can be discarded; an open one is real, the agent is off the floor
+ * right now however briefly.
+ */
+export function isDiscarded(s: SessionRecord, cfg: AppConfig): boolean {
+  if (s.endedAt === null || s.voided) return false;
+  return durationSeconds(s, s.endedAt) < cfg.minSessionS;
+}
+
+/** The sessions that count for anything. Apply before budget, allowance or reporting. */
+export function countable(sessions: readonly SessionRecord[], cfg: AppConfig): SessionRecord[] {
+  return sessions.filter((s) => !isDiscarded(s, cfg));
+}
+
 export function chargedMinutes(s: SessionRecord, type: BreakTypeConfig, now: Date): number {
   if (s.voided || !type.countsTowardBudget) return 0;
   return roundMinutes(durationSeconds(s, now));
