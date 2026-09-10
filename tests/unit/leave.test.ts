@@ -19,10 +19,11 @@ describe("leave hours (spec §6)", () => {
     expect(hourlyMinutes("1:00", "10:00", cfg)).toBeNull();
   });
 
-  it("daily: 8 h per working day; Fri–Sat only deducts 0; Sun–Thu = 40 h; Thu–Sun = 16 h", () => {
-    expect(dailyMinutes(FRI, SAT, cfg)).toBe(0);
-    expect(dailyMinutes(SUN, "2026-09-17", cfg)).toBe(2400);
-    expect(dailyMinutes(THU, SUN, cfg)).toBe(960);
+  it("daily: 8 h per working day; only Friday is free (Sat–Thu week)", () => {
+    expect(dailyMinutes(FRI, FRI, cfg)).toBe(0); // Friday alone costs nothing
+    expect(dailyMinutes(FRI, SAT, cfg)).toBe(480); // the Saturday is worked
+    expect(dailyMinutes(SUN, "2026-09-17", cfg)).toBe(2400); // Sun–Thu = 5 days
+    expect(dailyMinutes(THU, SUN, cfg)).toBe(1440); // Thu, Sat, Sun — Friday skipped
     expect(dailyMinutes(THU, THU, cfg)).toBe(480);
   });
 });
@@ -81,9 +82,11 @@ describe("submission (spec §6)", () => {
     expect(r).toEqual({ ok: false, error: "exceeds_balance" });
   });
 
-  it("a Fri–Sat daily request is accepted at 0 minutes", () => {
-    const r = validateSubmission({ input: { kind: "daily", startDate: FRI, endDate: SAT, reason: "x" }, existing: [], remainingMinutes: 0, cfg });
-    expect(r).toMatchObject({ ok: true, minutes: 0 });
+  it("a Friday-only request is accepted at 0 minutes; adding the Saturday costs a day", () => {
+    const friday = validateSubmission({ input: { kind: "daily", startDate: FRI, endDate: FRI, reason: "x" }, existing: [], remainingMinutes: 0, cfg });
+    expect(friday).toMatchObject({ ok: true, minutes: 0 });
+    const withSaturday = validateSubmission({ input: { kind: "daily", startDate: FRI, endDate: SAT, reason: "x" }, existing: [], remainingMinutes: 0, cfg });
+    expect(withSaturday).toEqual({ ok: false, error: "exceeds_balance" });
   });
 
   // Each refusal carries its own code so the form can point at the field that caused it
@@ -124,7 +127,8 @@ describe("submission (spec §6)", () => {
     expect(validateHourlyWindow("10:00", "09:00", cfg)).toEqual({ ok: false, error: "time_order" });
     expect(validateHourlyWindow("06:00", "09:00", cfg)).toEqual({ ok: false, error: "outside_work_hours" });
     expect(validateDailyRange(SUN, SUN, cfg)).toEqual({ ok: true, minutes: 8 * 60 });
-    expect(validateDailyRange(FRI, SAT, cfg)).toEqual({ ok: true, minutes: 0 });
+    expect(validateDailyRange(FRI, FRI, cfg)).toEqual({ ok: true, minutes: 0 });
+    expect(validateDailyRange(FRI, SAT, cfg)).toEqual({ ok: true, minutes: 480 });
     expect(validateDailyRange(SUN, THU, cfg)).toEqual({ ok: false, error: "date_order" });
   });
 });

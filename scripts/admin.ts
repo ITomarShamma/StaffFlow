@@ -6,6 +6,8 @@
 //   set-password --username U --password P
 //   deactivate --username U | activate --username U
 //   set-cap --general 1|2|3 [--toilet-female N] [--toilet-male N]
+//   show-config                                       every setting and its current value
+//   set-config --key K --value V                      change one setting (work hours, working days, budget…)
 //   sync                                              add missing break types and config keys (safe on live data)
 //   backup [--to path]                                consistent copy of the SQLite file
 //   reset                                             same as `npm run db:reset`
@@ -17,6 +19,7 @@ import path from "node:path";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { SEED_BREAK_TYPES, SEED_CONFIG } from "../prisma/seed-data";
+import { parseConfig } from "../src/domain/config";
 import { hashPassword } from "../src/server/auth";
 
 const url = process.env.DATABASE_URL?.trim() || "file:./data/staffflow.db";
@@ -100,6 +103,24 @@ async function main() {
       console.log(`caps: general ${t.capGeneral}, toilet F ${t.capToiletFemale}, toilet M ${t.capToiletMale}`);
       break;
     }
+    case "show-config": {
+      const rows = await prisma.config.findMany({ orderBy: { key: "asc" } });
+      for (const r of rows) console.log(`  ${r.key.padEnd(24)} ${r.value}`);
+      break;
+    }
+    case "set-config": {
+      const key = need(o, "key");
+      const value = need(o, "value");
+      const before = await prisma.config.findUnique({ where: { key } });
+      if (!before) throw new Error(`no such setting "${key}" — run show-config to list them`);
+      // Validated against the real parser first, so a bad value is refused here rather than
+      // taking every page down on the next request.
+      const rows = Object.fromEntries((await prisma.config.findMany()).map((r) => [r.key, r.value]));
+      parseConfig({ ...rows, [key]: value });
+      await prisma.config.update({ where: { key }, data: { value } });
+      console.log(`${key}: "${before.value}" -> "${value}"`);
+      break;
+    }
     case "sync": {
       // Reference data (break types, config keys) is seeded, but the seed wipes everything.
       // After an upgrade that adds a break type or a config key, this brings an existing
@@ -146,7 +167,7 @@ async function main() {
       break;
     }
     default:
-      console.log("commands: list | add-agent | set-password | deactivate | activate | set-cap | sync | backup | reset");
+      console.log("commands: list | add-agent | set-password | deactivate | activate | set-cap | show-config | set-config | sync | backup | reset");
       process.exit(cmd ? 2 : 0);
   }
 }

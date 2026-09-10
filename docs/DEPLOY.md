@@ -135,6 +135,8 @@ npm run admin -- activate --username agent13
 npm run admin -- set-cap --general 3
 npm run admin -- set-cap --toilet-female 2 --toilet-male 2
 npm run admin -- sync
+npm run admin -- show-config
+npm run admin -- set-config --key working_days --value "6,0,1,2,3,4"
 ```
 
 The general cap is also changed live by the Team Lead on the board (1 / 2 / 3). Break

@@ -47,11 +47,11 @@ describe("Asia/Damascus", () => {
     expect(weekdayOf(FRI)).toBe(5);
     expect(isWorkingDay(THU, cfg)).toBe(true);
     expect(isWorkingDay(FRI, cfg)).toBe(false);
-    expect(isWorkingDay(SAT, cfg)).toBe(false);
+    expect(isWorkingDay(SAT, cfg)).toBe(true);
     expect(isWorkingDay(SUN, cfg)).toBe(true);
-    expect(workingDaysBetween(FRI, SAT, cfg)).toBe(0);
+    expect(workingDaysBetween(FRI, SAT, cfg)).toBe(1); // Friday off, Saturday worked
     expect(workingDaysBetween(SUN, "2026-09-17", cfg)).toBe(5);
-    expect(workingDaysBetween(THU, SUN, cfg)).toBe(2);
+    expect(workingDaysBetween(THU, SUN, cfg)).toBe(3); // Thu, Sat, Sun — Friday skipped
     expect(workingDaysBetween(DAY, DAY, cfg)).toBe(1);
   });
 

@@ -30,7 +30,7 @@ export const SEED_CONFIG: Record<string, string> = {
   daily_budget_min: "25",
   work_start: "08:00",
   work_end: "16:00",
-  working_days: "0,1,2,3,4", // Sun–Thu (0 = Sunday)
+  working_days: "6,0,1,2,3,4", // Sat–Thu (0 = Sunday, 6 = Saturday); only Friday is off
   annual_leave_days: "14",
   hours_per_leave_day: "8",
   leave_year_start: "01-01",
