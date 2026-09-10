@@ -1,0 +1,720 @@
+<title>عرض StaffFlow التنفيذي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+
+<style>
+  :root {
+    /* Sham Cash brand, measured from the logo — the same tokens the app itself uses */
+    --navy:        #0E1024;
+    --navy-800:    #13192E;
+    --indigo:      #364484;
+    --indigo-400:  #5265AC;
+    --indigo-050:  #EEF0F8;
+    --green:       #348074;
+    --green-050:   #E6F2EF;
+
+    --surface:     #FFFFFF;
+    --ground:      #F4F6FA;
+    --raised:      #E9EDF4;
+    --line:        #D9DFEA;
+    --ink:         #1F2540;
+    --muted:       #5B6480;
+    --on-navy:     #E7EAF3;
+    --on-navy-dim: #A9B2CC;
+
+    /* the board's own status hues — used only in the legend, nowhere else */
+    --st-floor:  #348074;
+    --st-break:  #D68A1E;
+    --st-over:   #C62B2B;
+    --st-leave:  #8A93AA;
+    --st-hourly: #1F8FC7;
+
+    --ar: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+    --num: "IBM Plex Sans", "IBM Plex Sans Arabic", sans-serif;
+    --measure: 68ch;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --surface:  #161B2E;
+      --ground:   #0E1024;
+      --raised:   #1E2540;
+      --line:     #2C3452;
+      --ink:      #E7EAF3;
+      --muted:    #A0A9C4;
+      --indigo:   #7A8AC9;
+      --indigo-400: #96A4DC;
+      --indigo-050: #1C2440;
+      --green:    #56A899;
+      --green-050: #172F2C;
+      --st-floor:  #56A899;
+      --st-break:  #E0A24A;
+      --st-over:   #E06565;
+      --st-leave:  #97A0B8;
+      --st-hourly: #4EAAD8;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --surface:  #161B2E;
+    --ground:   #0E1024;
+    --raised:   #1E2540;
+    --line:     #2C3452;
+    --ink:      #E7EAF3;
+    --muted:    #A0A9C4;
+    --indigo:   #7A8AC9;
+    --indigo-400: #96A4DC;
+    --indigo-050: #1C2440;
+    --green:    #56A899;
+    --green-050: #172F2C;
+    --st-floor:  #56A899;
+    --st-break:  #E0A24A;
+    --st-over:   #E06565;
+    --st-leave:  #97A0B8;
+    --st-hourly: #4EAAD8;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { direction: rtl; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--ar);
+    font-size: 16.5px;
+    line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 900px;
+    margin-inline: auto;
+    padding-inline: 28px;
+  }
+
+  /* ---------- hero ---------- */
+  .hero {
+    background: var(--navy);
+    color: var(--on-navy);
+    padding-block: 76px 68px;
+    border-block-end: 3px solid var(--indigo);
+  }
+  .hero .wrap { display: flex; flex-direction: column; gap: 22px; }
+
+  .mark {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--num);
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: 0.01em;
+  }
+  .mark svg { display: block; }
+
+  .hero h1 {
+    margin: 0;
+    font-size: clamp(30px, 5vw, 46px);
+    font-weight: 700;
+    line-height: 1.35;
+    text-wrap: balance;
+    max-width: 20ch;
+  }
+  .hero .lede {
+    margin: 0;
+    max-width: 56ch;
+    color: var(--on-navy-dim);
+    font-size: 18px;
+    line-height: 1.8;
+  }
+  .hero .meta {
+    margin-block-start: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    font-size: 13.5px;
+    color: var(--on-navy-dim);
+  }
+  .hero .meta b { color: var(--on-navy); font-weight: 600; }
+
+  /* ---------- sections ---------- */
+  main { padding-block: 8px 90px; }
+
+  section { padding-block-start: 54px; }
+
+  h2 {
+    margin: 0 0 18px;
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 1.45;
+    text-wrap: balance;
+    padding-block-end: 12px;
+    border-block-end: 2px solid var(--indigo);
+  }
+  h3 {
+    margin: 30px 0 10px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  p { margin: 0 0 16px; max-width: var(--measure); }
+  strong { font-weight: 600; }
+
+  ul { margin: 0 0 16px; padding-inline-start: 22px; max-width: var(--measure); }
+  li { margin-block-end: 9px; }
+  li::marker { color: var(--indigo); }
+
+  .eyebrow {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--indigo);
+    margin-block-end: 8px;
+  }
+
+  /* ---------- summary panel ---------- */
+  .summary {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-inline-start: 4px solid var(--indigo);
+    border-radius: 10px;
+    padding: 26px 28px;
+    margin-block-start: 44px;
+  }
+  .summary h2 { border: 0; padding: 0; margin-block-end: 12px; font-size: 20px; }
+  .summary ul { margin-block-end: 0; }
+
+  /* ---------- status legend ---------- */
+  .legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+    gap: 12px;
+    margin-block: 22px;
+  }
+  .st {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 13px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    position: relative;
+    overflow: hidden;
+  }
+  .st::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: 4px;
+    background: var(--c);
+  }
+  .st b { font-size: 15.5px; font-weight: 600; color: var(--c); }
+  .st span { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* ---------- roles ---------- */
+  .roles { display: flex; flex-direction: column; gap: 14px; margin-block: 20px; }
+  .role {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+  .role h3 { margin: 0 0 6px; font-size: 17.5px; }
+  .role h3 small { font-weight: 500; color: var(--muted); font-size: 14px; }
+  .role p { margin: 0; font-size: 15.5px; color: var(--muted); line-height: 1.75; }
+
+  /* ---------- tables ---------- */
+  .table-scroll { overflow-x: auto; margin-block: 20px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 15.5px;
+  }
+  caption {
+    caption-side: top;
+    text-align: start;
+    font-size: 13.5px;
+    color: var(--muted);
+    padding-block-end: 9px;
+  }
+  th, td {
+    padding: 12px 16px;
+    text-align: start;
+    border-block-end: 1px solid var(--line);
+    vertical-align: top;
+  }
+  thead th {
+    background: var(--raised);
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  tbody tr:last-child th, tbody tr:last-child td { border-block-end: 0; }
+  .num {
+    font-family: var(--num);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    direction: ltr;
+    text-align: end;
+  }
+  /* mixed Arabic + digits: keep the paragraph direction, borrow only the figures */
+  .val {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  tr.total th, tr.total td {
+    background: var(--indigo-050);
+    font-weight: 700;
+    border-block-start: 2px solid var(--indigo);
+  }
+  td.good { color: var(--green); font-weight: 600; }
+
+  /* ---------- cost headline ---------- */
+  .figures {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px;
+    margin-block: 24px;
+  }
+  .fig {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .fig .v {
+    font-family: var(--num);
+    font-variant-numeric: tabular-nums;
+    direction: ltr;
+    text-align: start;
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--green);
+  }
+  .fig .k { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+  /* ---------- roadmap: a real sequence, so it is numbered ---------- */
+  .phases { margin-block: 24px; display: flex; flex-direction: column; }
+  .phase {
+    display: grid;
+    grid-template-columns: 46px 1fr;
+    gap: 20px;
+    padding-block-end: 30px;
+    position: relative;
+  }
+  .phase:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    inset-block: 46px 0;
+    inset-inline-start: 22px;
+    width: 2px;
+    background: var(--line);
+  }
+  .phase .n {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-family: var(--num);
+    font-weight: 700;
+    font-size: 17px;
+    background: var(--surface);
+    color: var(--indigo);
+    border: 2px solid var(--indigo);
+    position: relative;
+    z-index: 1;
+  }
+  .phase.done .n { background: var(--green); border-color: var(--green); color: #fff; }
+  .phase h3 { margin: 9px 0 6px; font-size: 18px; }
+  .phase .when {
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+  }
+  .phase.done .when { color: var(--green); }
+  .phase p { margin: 0; font-size: 15.5px; color: var(--muted); }
+
+  /* ---------- notes ---------- */
+  .note {
+    background: var(--indigo-050);
+    border-radius: 8px;
+    padding: 15px 18px;
+    font-size: 14.5px;
+    line-height: 1.75;
+    color: var(--ink);
+    max-width: var(--measure);
+    margin-block: 18px;
+  }
+  .note b { color: var(--indigo); }
+
+  footer {
+    border-block-start: 1px solid var(--line);
+    padding-block: 26px 40px;
+    font-size: 13.5px;
+    color: var(--muted);
+  }
+
+  @media (max-width: 620px) {
+    body { font-size: 16px; }
+    .hero { padding-block: 52px 46px; }
+    .phase { grid-template-columns: 38px 1fr; gap: 14px; }
+    .phase .n { width: 38px; height: 38px; font-size: 15px; }
+    .phase:not(:last-child)::before { inset-inline-start: 18px; inset-block-start: 40px; }
+  }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="mark">
+      <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 2 L29 9.5 V16 L16 23.5 L16 2 Z" fill="#5265AC"></path>
+        <path d="M16 2 L3 9.5 V22.5 L16 30 L16 2 Z" fill="#348074"></path>
+        <path d="M16 30 L29 22.5 V16 L16 23.5 Z" fill="#286E66"></path>
+      </svg>
+      <span>StaffFlow</span>
+    </div>
+    <h1>هل الفرع مغطّى الآن؟</h1>
+    <p class="lede">
+      أداة داخلية لفرع خدمة العملاء تُظهر، في أي لحظة، من هو على رأس عمله ومن هو خارجه
+      ولماذا — استراحة أم إجازة — وتطبّق قواعد الفرع تلقائياً بدل أن تُدار بالذاكرة والورق.
+    </p>
+    <div class="meta">
+      <span><b>الحالة:</b> النسخة الأولى جاهزة للتشغيل</span>
+      <span><b>النطاق:</b> فرع واحد · 14 مستخدماً</span>
+      <span><b>التاريخ:</b> <span class="num">10 / 09 / 2026</span></span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="summary" style="padding-block-start:26px">
+    <h2>الملخص التنفيذي</h2>
+    <ul>
+      <li><strong>المشكلة:</strong> لا أحد يعرف، في اللحظة نفسها، كم موظفاً غادر أرض العمل ولا متى يعود. التغطية تُدار بالتقدير، والاستراحات والإجازات تُسجَّل يدوياً أو لا تُسجَّل.</li>
+      <li><strong>الحل:</strong> شاشة واحدة تعرض الفريق كاملاً بالوقت الحقيقي، ونظام يمنع تجاوز حدود التغطية قبل حدوثه لا بعده.</li>
+      <li><strong>الجاهزية:</strong> النسخة الأولى مكتملة ومختبَرة، وتعمل على جهاز مكتبي واحد داخل الفرع دون إنترنت.</li>
+      <li><strong>التكلفة:</strong> بناء النظام كلّف <span class="num">≈ 15</span> دولاراً، وتشغيله يكلّف <span class="num">≈ 3</span> دولارات شهرياً. لا تراخيص، ولا رسوم لكل مستخدم.</li>
+      <li><strong>المطلوب:</strong> الموافقة على تشغيل تجريبي لمدة شهر في فرع واحد، ثم قرار التوسّع.</li>
+    </ul>
+  </section>
+
+  <section>
+    <span class="eyebrow">أولاً</span>
+    <h2>المشكلة اليوم</h2>
+    <p>
+      في فرع خدمة العملاء، جودة الخدمة مرتبطة مباشرة بعدد الموظفين الموجودين على الطاولات في
+      اللحظة نفسها. لكن هذا الرقم اليوم غير معروف لأحد:
+    </p>
+    <ul>
+      <li>الاستراحات تُؤخذ بالتنسيق الشفهي. قد يغادر أربعة موظفين معاً دون أن ينتبه أحد إلا بعد أن يطول الطابور.</li>
+      <li>لا يوجد سجل لمدة الاستراحة. من يتأخر عشرين دقيقة ومن يعود في ثلاث دقائق متساويان في نهاية اليوم.</li>
+      <li>طلبات الإجازة تنتقل عبر الورق أو الرسائل، وأرصدة الإجازات تُحسب يدوياً وتُنسى.</li>
+      <li>لا توجد أرقام يُبنى عليها قرار: لا أحد يعرف كم دقيقة تُصرف فعلياً على الاستراحات يومياً، ولا في أي ساعة تكون التغطية أضعف.</li>
+    </ul>
+    <p>
+      النتيجة أن الإدارة تتعامل مع أعراض متأخرة — شكوى، طابور، تململ — بدل أن ترى السبب لحظة
+      حدوثه.
+    </p>
+  </section>
+
+  <section>
+    <span class="eyebrow">ثانياً</span>
+    <h2>ما هو StaffFlow</h2>
+    <p>
+      نظام داخلي بسيط يجيب على سؤال واحد: <strong>من على أرض العمل الآن، ومن خارجها، ولماذا؟</strong>
+      هناك سببان فقط للغياب عن الطاولة — استراحة أو إجازة معتمدة — وكلاهما يُدار داخل النظام.
+    </p>
+    <p>
+      الموظف يأخذ استراحته بضغطة زر. النظام هو من يقرّر: هل الوقت ضمن الدوام؟ هل بقي له رصيد
+      دقائق اليوم؟ هل تجاوز عدد المرات المسموح لهذا النوع؟ وكم شخصاً خارج الطاولات في هذه اللحظة؟
+      إن كان أي شرط غير متحقق، لا تبدأ الاستراحة أصلاً.
+    </p>
+
+    <h3>كيف تبدو الشاشة للمشرف</h3>
+    <p>
+      لوحة واحدة فيها بطاقة لكل موظف، ولون البطاقة يقول الحالة من مسافة مترين:
+    </p>
+    <div class="legend">
+      <div class="st" style="--c: var(--st-floor)"><b>متواجد</b><span>على الطاولة</span></div>
+      <div class="st" style="--c: var(--st-break)"><b>في استراحة</b><span>مع عدّاد تنازلي</span></div>
+      <div class="st" style="--c: var(--st-over)"><b>تجاوز المدة</b><span>تأخّر عن العودة</span></div>
+      <div class="st" style="--c: var(--st-hourly)"><b>في إجازة ساعية</b><span>خارج لساعات محدّدة</span></div>
+      <div class="st" style="--c: var(--st-leave)"><b>في إجازة</b><span>يوم كامل معتمد</span></div>
+    </div>
+    <p>
+      وفوق البطاقات ثلاثة عدّادات تُظهر كم شخصاً خارج الطاولات مقابل الحد المسموح، فيرى المشرف
+      وضع التغطية كرقم واحد لا كتقدير.
+    </p>
+  </section>
+
+  <section>
+    <span class="eyebrow">ثالثاً</span>
+    <h2>من يستخدمه</h2>
+    <div class="roles">
+      <div class="role">
+        <h3>موظف خدمة العملاء <small>· 12 موظفاً</small></h3>
+        <p>
+          يرى أربعة أزرار للاستراحة ورصيده من الإجازات، ويقدّم طلبات الإجازة. لا يرى أي أرقام عن
+          استراحاته — لا عدّاد ولا دقائق متبقية — حتى لا تتحوّل الشاشة إلى أداة ضغط عليه.
+        </p>
+      </div>
+      <div class="role">
+        <h3>المشرف <small>· مشرف واحد</small></h3>
+        <p>
+          يرى اللوحة الحية للفريق كاملاً، ويرفع أو يخفض عدد المسموح لهم بالاستراحة في وقت واحد
+          حسب ضغط العمل، ويصحّح الأخطاء بملاحظة إلزامية تبقى مسجّلة. وله رصيد إجازات وطلبات كأي موظف.
+        </p>
+      </div>
+      <div class="role">
+        <h3>مدير الفرع <small>· مدير واحد</small></h3>
+        <p>
+          يعتمد الإجازات أو يرفضها، ويرى اللوحة نفسها للاطّلاع فقط، ويستخرج الملخص اليومي وأرصدة
+          الإجازات، ويصدّرها ملفاً جاهزاً للأرشفة أو للمشاركة.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">رابعاً</span>
+    <h2>القواعد التي يطبّقها النظام</h2>
+    <p>
+      هذه القيم ليست مكتوبة داخل البرنامج، بل مُدخلة كبيانات يمكن للإدارة تعديلها دون أي تدخّل
+      برمجي:
+    </p>
+    <div class="table-scroll">
+      <table>
+        <caption>إعدادات الفرع الحالية</caption>
+        <thead>
+          <tr><th>البند</th><th>القيمة</th><th>ماذا يعني</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">رصيد الاستراحات اليومي</th><td class="val">25 دقيقة</td><td>مجموع ما يصرفه الموظف يومياً على كل أنواع الاستراحات</td></tr>
+          <tr><th scope="row">استراحة تدخين</th><td class="val">3 دقائق × 5</td><td>خمس مرات كحد أقصى في اليوم</td></tr>
+          <tr><th scope="row">استراحة صلاة</th><td class="val">10 دقائق × 1</td><td>مرة واحدة في اليوم</td></tr>
+          <tr><th scope="row">استراحة طعام</th><td class="val">15 دقيقة × 1</td><td>مرة واحدة في اليوم</td></tr>
+          <tr><th scope="row">دورة المياه</th><td>غير محدودة</td><td>لا تُحتسب من الرصيد، ولها حصة منفصلة للرجال وأخرى للنساء</td></tr>
+          <tr><th scope="row">ساعات الدوام</th><td class="num">08:00 – 16:00</td><td>الأحد إلى الخميس</td></tr>
+          <tr><th scope="row">رصيد الإجازة السنوي</th><td class="val">14 يوماً</td><td>يُخصم بالساعة للإجازات الساعية</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      وإلى جانبها ثلاثة ضمانات تعمل تلقائياً: من ينسى إنهاء استراحته يُنهيها النظام عند حدّ ثابت
+      فلا تبقى مفتوحة إلى الأبد؛ وكل الاستراحات المفتوحة تُغلق عند نهاية الدوام؛ وأي تعديل يجريه
+      المشرف يبقى ظاهراً في السجل مع اسم من عدّله وسببه.
+    </p>
+  </section>
+
+  <section>
+    <span class="eyebrow">خامساً</span>
+    <h2>الأمان والبيانات</h2>
+    <ul>
+      <li><strong>لا شيء يغادر الفرع.</strong> النظام يعمل على جهاز مكتبي داخل الشبكة المحلية، ولا يحتاج إنترنت للتشغيل، ولا تُرفع أي بيانات إلى أي خدمة خارجية.</li>
+      <li><strong>الصلاحيات مُتحقَّق منها على الخادم.</strong> الموظف لا يستطيع الوصول إلى شاشات المشرف أو المدير حتى لو حاول عبر الرابط مباشرة، ولا يستطيع تجاوز حصص دورة المياه المخصصة لكل جنس.</li>
+      <li><strong>البيانات ملف واحد.</strong> كل شيء في ملف واحد على الجهاز، تُؤخذ منه نسخة احتياطية بأمر واحد، ويمكن نسخها إلى قرص خارجي يومياً.</li>
+      <li><strong>سجل غير قابل للمحو.</strong> كل قرار — اعتماد إجازة، تعديل استراحة، تغيير حد التغطية — يُسجَّل باسم صاحبه ووقته.</li>
+    </ul>
+  </section>
+
+  <section>
+    <span class="eyebrow">سادساً</span>
+    <h2>التكاليف التشغيلية</h2>
+    <p>
+      النظام مبني بالكامل على مكوّنات مفتوحة المصدر ويعمل على جهاز موجود أصلاً في الفرع، فلا
+      توجد تكاليف متكرّرة تُذكر:
+    </p>
+    <div class="table-scroll">
+      <table>
+        <caption>التكلفة الشهرية للتشغيل</caption>
+        <thead>
+          <tr><th>البند</th><th>التكلفة</th><th>ملاحظة</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">تراخيص برمجية</th><td class="num good">0 $</td><td>كل المكوّنات مفتوحة المصدر</td></tr>
+          <tr><th scope="row">استضافة أو خوادم سحابية</th><td class="num good">0 $</td><td>يعمل داخل الفرع</td></tr>
+          <tr><th scope="row">رسوم لكل مستخدم</th><td class="num good">0 $</td><td>عدد المستخدمين لا يغيّر التكلفة</td></tr>
+          <tr><th scope="row">اشتراك إنترنت للتشغيل</th><td class="num good">0 $</td><td>غير مطلوب بعد التركيب</td></tr>
+          <tr><th scope="row">كهرباء جهاز واحد</th><td class="num">≈ 3 $</td><td>جهاز مكتبي يعمل خلال الدوام</td></tr>
+          <tr><th scope="row">قرص نسخ احتياطي</th><td class="num">≈ 15 $</td><td>تكلفة لمرة واحدة</td></tr>
+          <tr class="total"><th scope="row">الإجمالي الشهري المتكرر</th><td class="num">≈ 3 $</td><td>عن الفرع بأكمله</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      لا يحتاج النظام إلى فريق تقني للصيانة. تغيير الأسماء أو الحدود أو ساعات الدوام يتم بأمر
+      واحد من الجهاز نفسه.
+    </p>
+  </section>
+
+  <section>
+    <span class="eyebrow">سابعاً</span>
+    <h2>تكلفة البناء</h2>
+    <p>
+      بُني النظام بالكامل باستخدام <strong>Claude Fable 5.1</strong> كأداة تطوير، دون
+      الاستعانة بمطوّرين خارجيين ودون شراء أي رخصة:
+    </p>
+    <div class="figures">
+      <div class="fig">
+        <span class="v">≈ 15 $</span>
+        <span class="k">التكلفة الفعلية لبناء النسخة الأولى</span>
+      </div>
+      <div class="fig">
+        <span class="v" style="direction:rtl">يومان</span>
+        <span class="k">مدة التنفيذ من الفكرة إلى نسخة جاهزة</span>
+      </div>
+      <div class="fig">
+        <span class="v">≈ 3 $</span>
+        <span class="k">التشغيل الشهري بعد ذلك</span>
+      </div>
+    </div>
+    <div class="note">
+      <b>كيف حُسبت:</b> اشتراك الأداة <span class="num">200</span> دولاراً شهرياً، والعمل الفعلي
+      على المشروع استغرق يومين، أي ما يعادل <span class="num">≈ 15</span> دولاراً من قيمة
+      الاشتراك. وحتى لو احتُسب الاشتراك الشهري بالكامل على هذا المشروع وحده، تبقى التكلفة
+      <span class="num">200</span> دولار لمرة واحدة.
+    </div>
+
+    <h3>مقارنة بالبدائل</h3>
+    <div class="table-scroll">
+      <table>
+        <caption>تكلفة الحصول على القدرة نفسها بطرق أخرى</caption>
+        <thead>
+          <tr><th>الخيار</th><th>تكلفة أولية</th><th>متكرر شهرياً</th><th>ملاحظة</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">StaffFlow — مبني داخلياً</th>
+            <td class="num good">≈ 15 $</td>
+            <td class="num good">≈ 3 $</td>
+            <td>مطابق لقواعد الفرع، والملكية كاملة للشركة</td>
+          </tr>
+          <tr>
+            <th scope="row">نظام موارد بشرية جاهز</th>
+            <td class="num">500 – 2,000 $</td>
+            <td class="num">70 – 170 $</td>
+            <td>يُحاسب لكل مستخدم، ونادراً ما يدعم قواعد الاستراحات بهذا التفصيل</td>
+          </tr>
+          <tr>
+            <th scope="row">تطوير خارجي مخصّص</th>
+            <td class="num">8,000 – 20,000 $</td>
+            <td class="num">200 – 500 $</td>
+            <td>أشهر للتسليم، والاعتماد على الجهة المطوّرة مستمر</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      الفارق ليس في السعر وحده. النظام المبني داخلياً يطابق قواعد الفرع كما هي فعلاً، ويمكن
+      تعديله في اليوم نفسه إذا تغيّرت سياسة الاستراحات أو الإجازات.
+    </p>
+  </section>
+
+  <section>
+    <span class="eyebrow">ثامناً</span>
+    <h2>خارطة الطريق</h2>
+    <p>
+      النسخة الحالية مقصودة الصغر: فرع واحد، وسببان فقط للغياب. كل مرحلة تالية تبني على قاعدة
+      بيانات موجودة أصلاً، لا على نظام جديد.
+    </p>
+    <div class="phases">
+      <div class="phase done">
+        <div class="n">1</div>
+        <div>
+          <span class="when">منجزة</span>
+          <h3>الفرع الواحد</h3>
+          <p>
+            الاستراحات بحدودها وحصصها، الإجازات الساعية واليومية باعتمادها وأرصدتها، اللوحة
+            الحية، التصحيحات، الملخص اليومي وتصديره. 14 مستخدماً على شبكة الفرع.
+          </p>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="n">2</div>
+        <div>
+          <span class="when">المرحلة التالية</span>
+          <h3>كل الفروع في لوحة واحدة</h3>
+          <p>
+            نفس النظام يخدم عدة فروع، مع لوحة إقليمية تقارن التغطية بينها، وصلاحيات لمدير المنطقة،
+            وتقارير تجمع الفروع في تقرير واحد.
+          </p>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="n">3</div>
+        <div>
+          <span class="when">توسّع</span>
+          <h3>دورة الموظف الكاملة</h3>
+          <p>
+            الحضور والانصراف، جداول الورديات، وربط الإجازات مباشرة بكشوف الرواتب — فيصبح ما يُسجَّل
+            هنا هو مصدر الرقم في نهاية الشهر بدل إعادة إدخاله يدوياً.
+          </p>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="n">4</div>
+        <div>
+          <span class="when">أفق أبعد</span>
+          <h3>القرار المبني على البيانات</h3>
+          <p>
+            التنبؤ بساعات الضغط من بيانات المكالمات والزيارات، واقتراح توزيع الاستراحات قبل وقوع
+            الازدحام، وتنبيهات استباقية للمشرف، وتطبيق للموظف على الهاتف.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">تاسعاً</span>
+    <h2>ما هو خارج النطاق الآن</h2>
+    <p>
+      ذُكر هذا صراحةً حتى لا يُبنى توقّع خاطئ. النسخة الأولى <strong>لا</strong> تشمل:
+    </p>
+    <ul>
+      <li>الحضور والانصراف أو ساعات العمل الإجمالية.</li>
+      <li>الرواتب أو أي حساب مالي.</li>
+      <li>تقييم الأداء أو جودة المكالمات.</li>
+      <li>تطبيق هاتف — الاستخدام من متصفّح على جهاز مكتبي فقط.</li>
+      <li>الربط مع أي نظام آخر في الشركة.</li>
+    </ul>
+    <p>كل بند من هذه موجود في خارطة الطريق أعلاه، وليس عائقاً تقنياً.</p>
+  </section>
+
+  <section>
+    <span class="eyebrow">عاشراً</span>
+    <h2>الخطوات التالية</h2>
+    <ul>
+      <li><strong>تشغيل تجريبي لمدة شهر</strong> في فرع واحد، بالبيانات الحقيقية وبكل الموظفين.</li>
+      <li><strong>مراجعة بعد أسبوعين</strong> على أرقام حقيقية: كم دقيقة تُصرف على الاستراحات، وفي أي ساعة تضعف التغطية، وكم طلب إجازة مرّ في النظام.</li>
+      <li><strong>ضبط الحدود</strong> بناءً على ما تُظهره الأرقام — وهو تعديل إعدادات لا تعديل برمجي.</li>
+      <li><strong>قرار التوسّع</strong> إلى بقية الفروع في نهاية الشهر.</li>
+    </ul>
+    <p>
+      المطلوب من الإدارة في هذه المرحلة شيئان فقط: الموافقة على التشغيل التجريبي، وتحديد جهاز
+      مكتبي واحد في الفرع ليعمل عليه النظام.
+    </p>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  StaffFlow — النسخة الأولى · مستند داخلي أُعدّ لعرضه على إدارة شام كاش · <span class="num">10 / 09 / 2026</span>
+</footer>
