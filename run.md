@@ -143,7 +143,7 @@ never code.
 | Keep it running after a reboot, without a window | Install it as a Windows service — `docs/DEPLOY.md` §3 (about ten minutes, needs an administrator PowerShell) |
 | Nightly copy of the data | `npm run admin -- backup` (writes `data\backups\staffflow-<date>.db`). `docs/DEPLOY.md` §5 shows how to schedule it |
 | Start over with fresh seed data (deletes everything) | stop the server (Ctrl+C in its window), then `npm run db:reset`, then `npm start` |
-| Update to a newer version | stop the server, then `git pull`, `npm ci`, `npx prisma migrate deploy`, `npm run build`, `npm start` |
+| Update to a newer version | stop the server, then `git pull`, `npm ci`, `npx prisma migrate deploy`, `npm run admin -- sync`, `npm run build`, `npm start` |
 
 All timestamps are kept in Asia/Damascus regardless of the desktop's own time-zone setting.
 
@@ -178,6 +178,7 @@ then `npm run demo`. Put both lines back to empty before real use.
 |---|---|
 | Employees cannot open the page, host can | The firewall rule (Part 1 step 6); the host's address; both PCs on the same branch network |
 | "table main.User does not exist" | The database was never created or was wiped: stop the server, run `npm run db:reset`, start again |
+| "A server error occurred" on every page after an update | The database is missing a setting the new version needs. Run `npm run admin -- sync`, then reload. It adds what is missing without deleting anything |
 | "Another next dev server is already running" | An old server window is still open — close it, or `npm start` instead of `npm run demo` |
 | Everyone logged out after a restart | `SESSION_SECRET` in `.env` is empty |
 | Page is in the wrong font | `npm run build` ran without internet — connect and build again |

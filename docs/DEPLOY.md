@@ -115,7 +115,12 @@ Plain HTTP on the LAN is the v0 decision (spec §11). The login cookie is `HttpO
   npm run demo
   ```
   The Team Lead and Branch Manager get a clock-jump control in the app bar. Do not run demo mode against the production database — reset afterwards.
-- **Upgrade**: `git pull`, `npm ci`, `npx prisma migrate deploy`, `npm run build`, restart the service.
+- **Upgrade**: `git pull`, `npm ci`, `npx prisma migrate deploy`, `npm run admin -- sync`, `npm run build`, restart the service.
+
+  `npm run admin -- sync` adds break types and configuration keys introduced by the new
+  version. It never overwrites a value you have tuned and never touches users, sessions or
+  leave. Skipping it after an upgrade that adds a configuration key makes every page fail
+  with a server error, because a missing key is refused rather than silently defaulted.
 
 ## 7. Changing caps or accounts without code
 
@@ -129,6 +134,7 @@ npm run admin -- deactivate --username agent13
 npm run admin -- activate --username agent13
 npm run admin -- set-cap --general 3
 npm run admin -- set-cap --toilet-female 2 --toilet-male 2
+npm run admin -- sync
 ```
 
 The general cap is also changed live by the Team Lead on the board (1 / 2 / 3). Break

@@ -6,6 +6,7 @@
 //   set-password --username U --password P
 //   deactivate --username U | activate --username U
 //   set-cap --general 1|2|3 [--toilet-female N] [--toilet-male N]
+//   sync                                              add missing break types and config keys (safe on live data)
 //   backup [--to path]                                consistent copy of the SQLite file
 //   reset                                             same as `npm run db:reset`
 
@@ -15,6 +16,7 @@ import { mkdirSync } from "node:fs";
 import path from "node:path";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "../src/generated/prisma/client";
+import { SEED_BREAK_TYPES, SEED_CONFIG } from "../prisma/seed-data";
 import { hashPassword } from "../src/server/auth";
 
 const url = process.env.DATABASE_URL?.trim() || "file:./data/staffflow.db";
@@ -98,6 +100,34 @@ async function main() {
       console.log(`caps: general ${t.capGeneral}, toilet F ${t.capToiletFemale}, toilet M ${t.capToiletMale}`);
       break;
     }
+    case "sync": {
+      // Reference data (break types, config keys) is seeded, but the seed wipes everything.
+      // After an upgrade that adds a break type or a config key, this brings an existing
+      // database up to date without touching users, sessions or leave.
+      let added = 0;
+      let changed = 0;
+      for (const t of SEED_BREAK_TYPES) {
+        const existing = await prisma.breakType.findUnique({ where: { code: t.code } });
+        if (!existing) {
+          await prisma.breakType.create({ data: t });
+          console.log(`  + break type "${t.code}"`);
+          added++;
+        }
+      }
+      for (const [key, value] of Object.entries(SEED_CONFIG)) {
+        const existing = await prisma.config.findUnique({ where: { key } });
+        if (!existing) {
+          await prisma.config.create({ data: { key, value } });
+          console.log(`  + config "${key}" = "${value}"`);
+          added++;
+        }
+      }
+      // Existing rows are never overwritten: the branch may have tuned them deliberately.
+      const extraTypes = (await prisma.breakType.findMany()).filter((t) => !SEED_BREAK_TYPES.some((s) => s.code === t.code));
+      for (const t of extraTypes) console.log(`  ! break type "${t.code}" exists here but not in the seed — left alone`);
+      console.log(added === 0 && changed === 0 ? "already up to date" : `added ${added} row(s); existing values were left unchanged`);
+      break;
+    }
     case "backup": {
       const file = url.replace(/^file:/, "");
       const stamp = new Date().toISOString().slice(0, 10);
@@ -116,7 +146,7 @@ async function main() {
       break;
     }
     default:
-      console.log("commands: list | add-agent | set-password | deactivate | activate | set-cap | backup | reset");
+      console.log("commands: list | add-agent | set-password | deactivate | activate | set-cap | sync | backup | reset");
       process.exit(cmd ? 2 : 0);
   }
 }
