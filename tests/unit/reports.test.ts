@@ -94,8 +94,8 @@ describe("formatted Excel export", () => {
       meta: "عدد الموظفين: 2",
       columns: [
         { header: "الموظف", width: 24, kind: "text", value: (x) => x.name },
-        { group: "تدخين", header: "العدد", width: 8, kind: "int", value: (x) => x.a, total: (rs) => rs.reduce((n, x) => n + x.a, 0) },
-        { group: "تدخين", header: "الدقائق", width: 8, kind: "int", value: (x) => x.b },
+        { group: "قصيرة", header: "العدد", width: 8, kind: "int", value: (x) => x.a, total: (rs) => rs.reduce((n, x) => n + x.a, 0) },
+        { group: "قصيرة", header: "الدقائق", width: 8, kind: "int", value: (x) => x.b },
       ],
       rows,
       totalLabel: "المجموع",
@@ -110,7 +110,7 @@ describe("formatted Excel export", () => {
     expect(ws.views[0]?.rightToLeft).toBe(true);
     expect(ws.getCell("A1").value).toBe("الملخص اليومي");
     expect(ws.getCell(5, 1).value).toBe("الموظف"); // spans both header rows
-    expect(ws.getCell(5, 2).value).toBe("تدخين"); // group over its two columns
+    expect(ws.getCell(5, 2).value).toBe("قصيرة"); // group over its two columns
     expect(ws.getCell(6, 2).value).toBe("العدد");
     expect(ws.getCell(6, 3).value).toBe("الدقائق");
     expect(ws.getCell(7, 1).value).toBe("أحمد");

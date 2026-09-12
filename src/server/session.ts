@@ -27,10 +27,18 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
   return { user, token: parsed.token };
 });
 
-/** Redirects to /login when signed out and to /403 when the role does not match. */
+/**
+ * Redirects to /login when signed out and to /403 when the role does not match. A cookie
+ * with no live session behind it (database reset, password changed, account disabled) goes
+ * through /session/reset first, which deletes it: a page cannot change cookies, and a stale
+ * cookie left in place is what used to lock every desktop out (bug 2026-09-12).
+ */
 export async function requireRole(...roles: Role[]): Promise<CurrentUser> {
   const me = await getCurrentUser();
-  if (!me) redirect("/login");
+  if (!me) {
+    const stale = Boolean((await cookies()).get(SESSION_COOKIE)?.value);
+    redirect(stale ? "/session/reset" : "/login");
+  }
   if (!roles.includes(me.user.role)) redirect("/403");
   return me;
 }

@@ -19,8 +19,9 @@ const M1 = "agent04";
 const D = "agent06";
 const E = "agent07";
 const G = "agent08";
-const F1 = "agent10";
-const F2 = "agent11";
+// Female agents present in both the original seed and the roster as edited on 2026-09-12.
+const F1 = "agent11";
+const F2 = "agent12";
 
 async function login(browser: Browser, username: string): Promise<{ context: BrowserContext; page: Page }> {
   const context = await browser.newContext();
@@ -344,6 +345,10 @@ test("spec §10 demo script, steps 0–11", async ({ browser }) => {
   await expect(lead.locator('[data-testid="my-request"][data-status="pending"]')).toHaveCount(1);
   await manager.goto("/manager/decisions");
   const leadRow = manager.locator(`[data-testid="pending-row"][data-agent="${name("lead")}"]`);
+  // when it was submitted, shown to the manager and to the Team Lead (decision 2026-09-12)
+  await expect(leadRow.locator('[data-col="requested-at"]')).toHaveText(/^[0-9]{2}[/][0-9]{2}[/][0-9]{4} [0-9]{2}:[0-9]{2}$/);
+  await lead.goto("/lead/requests");
+  await expect(lead.locator('[data-testid="request-row"] [data-col="requested-at"]').first()).toHaveText(/^[0-9]{2}[/][0-9]{2}[/][0-9]{4} [0-9]{2}:[0-9]{2}$/);
   await leadRow.getByTestId("approve").click();
   await expect(leadRow).toHaveCount(0);
   await lead.goto("/lead/leave");
@@ -356,5 +361,52 @@ test("spec §10 demo script, steps 0–11", async ({ browser }) => {
   await expect(lead.locator('[data-kind="team_lead"]')).toHaveCount(0);
   await manager.goto("/manager/balances");
   await expect(manager.locator(`[data-testid="balance-row"][data-agent="${name("lead")}"] [data-col="remaining"]`)).toHaveText("13.50");
+  // ---- Stale login cookie (bug 2026-09-12): with its session gone from the database, as
+  // after `npm run db:reset`, the browser must land on the login form and lose the cookie,
+  // not bounce between /login and the home page forever ----
+  const rw = new Database("data/e2e.db");
+  const staleUser = rw.prepare(`SELECT id FROM "User" WHERE username = ?`).get(A) as { id: string };
+  rw.prepare(`DELETE FROM "AuthSession" WHERE "userId" = ?`).run(staleUser.id);
+  rw.close();
+  expect((await a.context.cookies()).some((ck) => ck.name === "sf_session")).toBe(true); // the browser still holds it
+  await a.page.goto("/agent");
+  await expect(a.page).toHaveURL(/\/login$/);
+  await expect(a.page.getByTestId("login-form")).toBeVisible();
+  expect((await a.context.cookies()).some((ck) => ck.name === "sf_session")).toBe(false); // and now it is gone
+  await a.page.goto("/login");
+  await expect(a.page.getByTestId("login-form")).toBeVisible(); // no redirect loop
+
+  // ---- Change password from the login screen (decision 2026-09-12) ----
+  const pw = await (await browser.newContext()).newPage();
+  await pw.goto("/login");
+  await pw.getByTestId("change-password-link").click();
+  await expect(pw).toHaveURL(/\/login\/password$/);
+  const pwError = pw.getByTestId("password-form").getByRole("alert");
+  const submitPw = async (current: string, next: string, confirm: string) => {
+    await pw.locator('input[name="username"]').fill("agent09");
+    await pw.locator('input[name="current"]').fill(current);
+    await pw.locator('input[name="next"]').fill(next);
+    await pw.locator('input[name="confirm"]').fill(confirm);
+    await pw.getByTestId("save-password").click();
+  };
+  await submitPw(PASSWORD, "short", "short");
+  await expect(pwError).toContainText("8 أحرف على الأقل");
+  await submitPw(PASSWORD, "NewPass123", "NewPass124");
+  await expect(pwError).toContainText("غير متطابقتين");
+  await submitPw("wrong-password", "NewPass123", "NewPass123");
+  await expect(pwError).toContainText("اسم المستخدم أو كلمة المرور غير صحيحة");
+  await submitPw(PASSWORD, "NewPass123", "NewPass123");
+  await expect(pw).toHaveURL(/\/login\?changed=1$/);
+  await expect(pw.getByTestId("password-changed")).toBeVisible();
+  // the old password no longer works; the new one does
+  await pw.locator('input[name="username"]').fill("agent09");
+  await pw.locator('input[name="password"]').fill(PASSWORD);
+  await pw.getByRole("button", { name: "دخول" }).click();
+  await expect(pw.getByTestId("login-form").getByRole("alert")).toContainText("اسم المستخدم أو كلمة المرور غير صحيحة");
+  await pw.locator('input[name="username"]').fill("agent09");
+  await pw.locator('input[name="password"]').fill("NewPass123");
+  await pw.getByRole("button", { name: "دخول" }).click();
+  await pw.waitForURL(/\/agent$/);
+
   db.close();
 });

@@ -40,7 +40,7 @@ export const ar = {
   },
 
   breaks: {
-    smoke: "استراحة تدخين",
+    smoke: "استراحة قصيرة", // user decision 2026-09-12 (Appendix A had «استراحة تدخين»)
     prayer: "استراحة صلاة",
     meal: "استراحة طعام",
     toilet: "دورة مياه",
@@ -54,7 +54,7 @@ export const ar = {
     generalCap: "الحد الأقصى للمجموعة العامة",
     budgetUsed: "الرصيد المستخدم",
     // Tile counters, from the Appendix A example "تدخين 3/5 · صلاة 1/1 · طعام 0/1"
-    counterSmoke: "تدخين",
+    counterSmoke: "قصيرة", // user decision 2026-09-12
     counterPrayer: "صلاة",
     counterMeal: "طعام",
     counterSeparator: " · ",
@@ -117,7 +117,7 @@ export const ar = {
   // From the design handoff (docs/design/StaffFlow.dc.html, StaffFlow Screens.dc.html)
   design: {
     summary: {
-      smoke: "تدخين",
+      smoke: "استراحة قصيرة", // user decision 2026-09-12
       prayer: "صلاة",
       meal: "طعام",
       toilet: "دورة مياه",
@@ -127,8 +127,8 @@ export const ar = {
     csvHeaders: [
       "الموظف",
       "الرصيد المستخدم",
-      "تدخين — العدد",
-      "تدخين — الدقائق",
+      "استراحة قصيرة — العدد",
+      "استراحة قصيرة — الدقائق",
       "صلاة — العدد",
       "صلاة — الدقائق",
       "طعام — العدد",
@@ -160,6 +160,22 @@ export const ar = {
     invalidEndTime: "وقت انتهاء غير صالح", // TODO-COPY end ≤ start or in the future
     notAllowed: "الإجراء غير مسموح", // TODO-COPY lifecycle refusal (e.g. approving a non-pending request)
     pageTitleSuffix: "StaffFlow",
+    requestedAt: "وقت تسجيل الطلب", // TODO-COPY decision 2026-09-12: when a leave request was submitted
+
+    // TODO-COPY change password from the login screen (decision 2026-09-12)
+    password: {
+      link: "تغيير كلمة المرور",
+      title: "تغيير كلمة المرور",
+      current: "كلمة المرور الحالية",
+      next: "كلمة المرور الجديدة",
+      confirm: "تأكيد كلمة المرور الجديدة",
+      save: "حفظ كلمة المرور الجديدة",
+      back: "العودة إلى تسجيل الدخول",
+      changed: "تم تغيير كلمة المرور. سجّل الدخول بكلمة المرور الجديدة.",
+      tooShort: (n: number) => `كلمة المرور الجديدة قصيرة: ${n} أحرف على الأقل`,
+      mismatch: "كلمتا المرور الجديدتان غير متطابقتين",
+      sameAsCurrent: "كلمة المرور الجديدة يجب أن تختلف عن الحالية",
+    },
 
     // TODO-COPY leave refusals — Appendix A has only «يتجاوز الرصيد المتبقي» and
     // «يتعارض مع طلب آخر»; every other cause used to fail silently (fixed 2026-09-10).

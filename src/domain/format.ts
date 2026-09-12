@@ -37,3 +37,9 @@ export function formatHours(minutes: number): string {
   const h = Math.round((minutes / 60) * 100) / 100;
   return String(h);
 }
+
+/** Date → "dd/mm/yyyy HH:mm" in Asia/Damascus. */
+export function fmtDateTime(d: Date): string {
+  const p = localParts(d);
+  return `${fmtDate(p.date)} ${p.time}`;
+}

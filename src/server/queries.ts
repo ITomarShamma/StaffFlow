@@ -1,6 +1,7 @@
 // Reads. Every read that touches sessions runs the sweep first (CLAUDE.md rule 9).
 
 import { formatDays, remainingMinutes } from "@/domain/balance";
+import { fmtDateTime } from "@/domain/format";
 import { budgetUsedDisplay, countable, usedToday } from "@/domain/budget";
 import { usedCount } from "@/domain/allowances";
 import { leaveStateAt, requestDate } from "@/domain/leave";
@@ -227,6 +228,8 @@ export interface LeaveRowVM {
   decisionNote: string | null;
   /** Remaining balance of that agent for the request's year, formatted in days. */
   remainingDays: string;
+  /** When the request was submitted, on the server clock, "dd/mm/yyyy HH:mm" (decision 2026-09-12). */
+  requestedAt: string;
   sortKey: string;
 }
 
@@ -241,7 +244,8 @@ async function leaveRows(where: { userId?: string; status?: string | { in: strin
   const approved = userIds.length
     ? (await prisma.leaveRequest.findMany({ where: { userId: { in: userIds }, status: "approved" } })).map(toLeave)
     : [];
-  return rows.map(toLeave).map((r) => {
+  return rows.map((raw) => {
+    const r = toLeave(raw);
     const year = yearOf(requestDate(r));
     const remaining = remainingMinutes(
       cfg,
@@ -263,6 +267,7 @@ async function leaveRows(where: { userId?: string; status?: string | { in: strin
       status: r.status,
       decisionNote: r.decisionNote,
       remainingDays: formatDays(remaining, cfg),
+      requestedAt: fmtDateTime(raw.createdAt),
       sortKey: r.kind === "hourly" ? `${r.date} ${r.fromTime}` : `${r.startDate}`,
     };
   });

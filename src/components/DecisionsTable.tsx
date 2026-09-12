@@ -35,6 +35,7 @@ export function PendingDecisions({ rows }: { rows: LeaveRowVM[] }) {
             <th className={th}>{ar.leave.date}</th>
             <th className={th}>{ar.leave.hours}</th>
             <th className={th}>{ar.leave.reason}</th>
+            <th className={th}>{ar.todo.requestedAt}</th>
             <th className={th}>{ar.leave.remainingBalance}</th>
             <th className={`${th} w-[260px]`}>{ar.leave.decisionNote}</th>
             <th className={thEdge} />
@@ -49,6 +50,9 @@ export function PendingDecisions({ rows }: { rows: LeaveRowVM[] }) {
               </td>
               <td className={`${td} tabular-nums`}>{formatHours(r.minutes)}</td>
               <td className={`${td} text-muted`}>{r.reason}</td>
+              <td className={`${td} text-[13px] text-muted tabular-nums whitespace-nowrap`} data-col="requested-at">
+                <span dir="ltr">{r.requestedAt}</span>
+              </td>
               <td className={`${td} tabular-nums`}>
                 <span dir="ltr">{r.remainingDays}</span> {ar.table.day}
               </td>
@@ -110,6 +114,7 @@ export function ApprovedDecisions({ rows }: { rows: LeaveRowVM[] }) {
           <th className={th}>{ar.leave.date}</th>
           <th className={th}>{ar.leave.hours}</th>
           <th className={th}>{ar.leave.reason}</th>
+          <th className={th}>{ar.todo.requestedAt}</th>
           <th className={th}>{ar.leave.decisionNote}</th>
           <th className={th}>{ar.leave.remainingBalance}</th>
           <th className={thEdge} />
@@ -124,6 +129,9 @@ export function ApprovedDecisions({ rows }: { rows: LeaveRowVM[] }) {
             </td>
             <td className={`${td} tabular-nums`}>{formatHours(r.minutes)}</td>
             <td className={`${td} text-muted`}>{r.reason}</td>
+            <td className={`${td} text-[13px] text-muted tabular-nums whitespace-nowrap`} data-col="requested-at">
+              <span dir="ltr">{r.requestedAt}</span>
+            </td>
             <td className={`${td} text-muted`}>{r.decisionNote}</td>
             <td className={`${td} tabular-nums`}>
               <span dir="ltr">{r.remainingDays}</span> {ar.table.day}

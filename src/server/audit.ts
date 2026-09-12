@@ -1,6 +1,6 @@
 import type { Prisma } from "@/generated/prisma/client";
 
-export type AuditAction = "cap_changed" | "session_edited" | "session_voided" | "leave_decided" | "leave_revoked" | "demo_clock_set";
+export type AuditAction = "cap_changed" | "session_edited" | "session_voided" | "leave_decided" | "leave_revoked" | "demo_clock_set" | "password_changed";
 
 export async function audit(
   tx: Prisma.TransactionClient,

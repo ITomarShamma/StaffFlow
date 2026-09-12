@@ -72,6 +72,7 @@ export function RequestsTable({ rows }: { rows: LeaveRowVM[] }) {
             <th className={th}>{ar.leave.date}</th>
             <th className={th}>{ar.leave.hours}</th>
             <th className={th}>{ar.leave.reason}</th>
+            <th className={th}>{ar.todo.requestedAt}</th>
             <th className={th} />
             <th className={thEdge}>{ar.leave.remainingBalance}</th>
           </tr>
@@ -85,6 +86,9 @@ export function RequestsTable({ rows }: { rows: LeaveRowVM[] }) {
               </td>
               <td className={`${td} tabular-nums`}>{formatHours(r.minutes)}</td>
               <td className={`${td} text-muted`}>{r.reason}</td>
+              <td className={`${td} text-[13px] text-muted tabular-nums whitespace-nowrap`} data-col="requested-at">
+                <span dir="ltr">{r.requestedAt}</span>
+              </td>
               <td className={td}>
                 <LeaveStatusChip status={r.status} />
               </td>
