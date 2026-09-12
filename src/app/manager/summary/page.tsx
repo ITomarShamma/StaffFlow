@@ -20,8 +20,15 @@ export default async function SummaryPage({ searchParams }: { searchParams: Prom
         <h1 className="m-0 text-2xl font-semibold">{ar.nav.dailySummary}</h1>
         <SummaryDatePicker date={date} />
         <a
+          href={`/manager/summary/xlsx?date=${date}`}
+          className="ms-auto h-10 px-5 inline-flex items-center rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700"
+          data-testid="export-xlsx"
+        >
+          {ar.todo.reports.exportExcel}
+        </a>
+        <a
           href={`/manager/summary/csv?date=${date}`}
-          className="ms-auto h-10 px-5 inline-flex items-center border border-line rounded-lg bg-surface-0 text-ink font-medium hover:border-indigo-400"
+          className="h-10 px-5 inline-flex items-center border border-line rounded-lg bg-surface-0 text-ink font-medium hover:border-indigo-400"
           data-testid="export-csv"
         >
           {ar.table.exportCsv}

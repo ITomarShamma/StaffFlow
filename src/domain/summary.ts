@@ -1,6 +1,7 @@
 // Spec §9 — per agent, per day metrics, and the CSV.
 
 import { budgetUsedDisplay, chargedMinutes, countable } from "./budget";
+import { datesOfMonth, isWorkingDay } from "./tz";
 import { leaveOnDate } from "./leave";
 import { isOverrun } from "./sessions";
 import type { AppConfig, BreakTypeConfig, LeaveRecord, SessionRecord } from "./types";
@@ -100,4 +101,74 @@ export function summaryCsv(headers: readonly string[], rows: readonly SummaryRow
     );
   }
   return lines.join("\r\n") + "\r\n";
+}
+
+// ---------------------------------------------------------------------------------------
+// Monthly report (decision 2026-09-12). A month is the sum of its daily summaries, computed
+// by the same dailySummary, so a monthly figure always equals the daily figures added up
+// and every daily rule (mis-clicks, voids, stale toilets, leave) carries over unchanged.
+
+export interface MonthlyRow {
+  userId: string;
+  name: string;
+  /** Working days the report covers. */
+  daysCounted: number;
+  /** daysCounted minus the days covered by daily leave. */
+  daysAtWork: number;
+  /** Sum of each day's reported budget use (each day already clamped at the budget). */
+  budgetUsed: number;
+  /** budgetUsed per day at work, one decimal. */
+  avgPerDay: number;
+  smoke: { count: number; minutes: number };
+  prayer: { count: number; minutes: number };
+  meal: { count: number; minutes: number };
+  toiletCount: number;
+  callCount: number;
+  overruns: number;
+  autoEnded: number;
+  edited: number;
+  leaveMinutes: number;
+  leaveDays: number;
+}
+
+/** The days a monthly report covers: working days of `month`, up to and including today. */
+export function reportDates(month: string, today: string, cfg: AppConfig): string[] {
+  return datesOfMonth(month).filter((d) => d <= today && isWorkingDay(d, cfg));
+}
+
+/** Average break minutes per day at work, one decimal; 0 when there were no days at work. */
+export function averagePerDay(budgetUsed: number, daysAtWork: number): number {
+  return daysAtWork > 0 ? Math.round((budgetUsed / daysAtWork) * 10) / 10 : 0;
+}
+
+export function monthlyTotals(
+  agents: readonly { id: string; nameAr: string }[],
+  days: readonly { date: string; rows: readonly SummaryRow[] }[],
+): MonthlyRow[] {
+  return agents.map((agent) => {
+    const mine = days.map((d) => d.rows.find((r) => r.userId === agent.id)).filter((r): r is SummaryRow => r !== undefined);
+    const sum = (f: (r: SummaryRow) => number) => mine.reduce((n, r) => n + f(r), 0);
+    const leaveDays = sum((r) => r.leaveDay);
+    const daysAtWork = Math.max(0, days.length - leaveDays);
+    const budgetUsed = sum((r) => r.budgetUsed);
+    const pair = (k: "smoke" | "prayer" | "meal") => ({ count: sum((r) => r[k].count), minutes: sum((r) => r[k].minutes) });
+    return {
+      userId: agent.id,
+      name: agent.nameAr,
+      daysCounted: days.length,
+      daysAtWork,
+      budgetUsed,
+      avgPerDay: averagePerDay(budgetUsed, daysAtWork),
+      smoke: pair("smoke"),
+      prayer: pair("prayer"),
+      meal: pair("meal"),
+      toiletCount: sum((r) => r.toiletCount),
+      callCount: sum((r) => r.callCount),
+      overruns: sum((r) => r.overruns),
+      autoEnded: sum((r) => r.autoEnded),
+      edited: sum((r) => r.edited),
+      leaveMinutes: sum((r) => r.leaveMinutes),
+      leaveDays,
+    };
+  });
 }

@@ -262,6 +262,30 @@ test("spec §10 demo script, steps 0–11", async ({ browser }) => {
   // The CSV route is a manager-only route handler
   const agentCsv = await a.context.request.get(`/manager/summary/csv?date=${DAY}`);
   expect(agentCsv.status()).toBe(403);
+  // ---- Formatted Excel export and the monthly report (decision 2026-09-12) ----
+  const xlsx = await manager.request.get(`/manager/summary/xlsx?date=${DAY}`);
+  expect(xlsx.status()).toBe(200);
+  expect(xlsx.headers()["content-type"]).toContain("spreadsheetml");
+  expect(xlsx.headers()["content-disposition"]).toContain(`staffflow-${DAY}.xlsx`);
+  expect((await xlsx.body()).subarray(0, 2).toString()).toBe("PK"); // a real .xlsx, not an error page
+  expect((await a.context.request.get(`/manager/summary/xlsx?date=${DAY}`)).status()).toBe(403);
+  const MONTH = DAY.slice(0, 7);
+  await manager.goto(`/manager/monthly?month=${MONTH}`);
+  await expect(manager.locator(`[data-testid="monthly-row"][data-agent="${name(A)}"] [data-col="smoke-n"]`)).toHaveText("1");
+  await expect(manager.getByTestId("monthly-total")).toBeVisible();
+  const monthly = await manager.request.get(`/manager/monthly/xlsx?month=${MONTH}`);
+  expect(monthly.status()).toBe(200);
+  expect(monthly.headers()["content-disposition"]).toContain(`staffflow-${MONTH}.xlsx`);
+  expect((await a.context.request.get(`/manager/monthly?month=${MONTH}`)).status()).toBe(403);
+  expect((await a.context.request.get(`/manager/monthly/xlsx?month=${MONTH}`)).status()).toBe(403);
+
+  // ---- Call break (decision 2026-09-10): the fifth button really starts a break (bug 2026-09-12) ----
+  await a.page.goto("/agent");
+  await expect(a.page.getByTestId("break-call")).toHaveAttribute("data-state", "available");
+  await a.page.getByTestId("break-call").click();
+  await expect(a.page.getByTestId("status-card")).toHaveAttribute("data-status", "on_break");
+  await a.page.getByRole("button", { name: "عودة إلى العمل" }).click();
+  await expect(a.page.getByTestId("status-card")).toHaveAttribute("data-status", "on_floor");
 
   // ---- Leave refusals name their cause, and the time wheels set the value (decisions 2026-09-10) ----
   const leaveError = a.page.locator('[data-testid="leave-form"] [role="alert"]');

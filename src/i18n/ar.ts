@@ -21,6 +21,7 @@ export const ar = {
     corrections: "التصحيحات",
     dailySummary: "الملخص اليومي",
     leaveBalances: "أرصدة الإجازات",
+    monthlyReport: "التقرير الشهري", // TODO-COPY decision 2026-09-12; not in Appendix A
     demoMode: "وضع العرض التجريبي",
   },
 
@@ -186,6 +187,26 @@ export const ar = {
       minute: "دقيقة", // TODO-COPY minute column heading
       placeholder: "--:--", // TODO-COPY empty time field
       done: "تم", // TODO-COPY closes the picker
+    },
+
+    // TODO-COPY reports (decision 2026-09-12): the formatted Excel export and the monthly report.
+    reports: {
+      exportExcel: "تصدير Excel", // TODO-COPY
+      org: "شام كاش · فرع خدمة العملاء", // TODO-COPY title block of exported sheets
+      month: "الشهر", // TODO-COPY
+      date: "التاريخ", // TODO-COPY
+      issuedAt: "تاريخ الإصدار", // TODO-COPY
+      staffCount: "عدد الموظفين", // TODO-COPY
+      daysAtWork: "أيام الدوام", // TODO-COPY working days minus days on daily leave
+      budgetMinutes: "الرصيد المستخدم (دقيقة)", // TODO-COPY
+      avgPerDay: "المتوسط اليومي (دقيقة)", // TODO-COPY
+      total: "المجموع", // TODO-COPY totals row
+      leaveDays: "الأيام", // TODO-COPY leave column, monthly
+      coverage: (from: string, to: string, n: number) => `أيام الدوام المشمولة: من ${from} إلى ${to} · العدد ${n}`, // TODO-COPY
+      noDays: "لا توجد أيام دوام في هذا الشهر حتى الآن", // TODO-COPY
+      pageFooter: "صفحة &P من &N", // TODO-COPY Excel page footer (&P/&N are Excel codes)
+      weekdays: ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"], // TODO-COPY
+      months: ["كانون الثاني", "شباط", "آذار", "نيسان", "أيار", "حزيران", "تموز", "آب", "أيلول", "تشرين الأول", "تشرين الثاني", "كانون الأول"], // TODO-COPY Levantine month names
     },
   },
 } as const;

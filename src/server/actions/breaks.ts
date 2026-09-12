@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { canStart, endByAgent, newSessionDraft, openSessionOf, type Refusal } from "@/domain/sessions";
-import { typeByCode } from "@/domain/types";
+import { BREAK_TYPE_CODES, typeByCode, type BreakTypeCode } from "@/domain/types";
 import { serverNow } from "../clock";
 import { prisma } from "../db";
 import { withLock } from "../lock";
@@ -12,7 +12,9 @@ import { loadTeamContext } from "../queries";
 import { requireRole } from "../session";
 import type { ActionResult } from "./types";
 
-const codeSchema = z.enum(["smoke", "prayer", "meal", "toilet"]);
+// Derived from the one list of break types, so a new type can never be rejected here as
+// "invalid" while its button is on screen (the call-button bug, 2026-09-12).
+const codeSchema = z.enum(BREAK_TYPE_CODES as [BreakTypeCode, ...BreakTypeCode[]]);
 
 /** Spec §5.3 — self-serve start. The gender for the toilet pool comes from the database, never the client. */
 export async function startBreak(codeRaw: unknown): Promise<ActionResult<Refusal | "invalid">> {

@@ -144,3 +144,22 @@ export function localDayBounds(now: Date): { date: string; start: Date; end: Dat
   const date = localParts(now).date;
   return { date, start: dayStartUtc(date), end: dayStartUtc(addDays(date, 1)) };
 }
+
+/** "YYYY-MM" with a real month. */
+export function isIsoMonth(s: string): boolean {
+  if (!/^\d{4}-\d{2}$/.test(s)) return false;
+  const m = Number(s.slice(5, 7));
+  return m >= 1 && m <= 12;
+}
+
+/** "YYYY-MM-DD" → "YYYY-MM". */
+export function monthOf(date: string): string {
+  return date.slice(0, 7);
+}
+
+/** Every local date of a month, in order: "2026-09" → ["2026-09-01", …, "2026-09-30"]. */
+export function datesOfMonth(month: string): string[] {
+  const out: string[] = [];
+  for (let d = `${month}-01`; d.startsWith(month); d = addDays(d, 1)) out.push(d);
+  return out;
+}

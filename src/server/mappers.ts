@@ -1,10 +1,11 @@
 // Prisma rows → domain records. Enumerations are validated here, at the boundary.
 
 import { z } from "zod";
+import { BREAK_TYPE_CODES as BREAK_CODES } from "@/domain/types";
 import type { BreakSession, BreakType, LeaveRequest, Team, User } from "@/generated/prisma/client";
 import type { AgentRef, BreakTypeConfig, LeaveRecord, SessionRecord, TeamCaps } from "@/domain/types";
 
-const breakCode = z.enum(["smoke", "prayer", "meal", "toilet", "call"]);
+const breakCode = z.enum(BREAK_CODES as [(typeof BREAK_CODES)[number], ...(typeof BREAK_CODES)[number][]]);
 const endedBy = z.enum(["agent", "system", "team_lead"]).nullable();
 const endReason = z.enum(["auto_end", "stale", "end_of_day"]).nullable();
 const leaveKind = z.enum(["hourly", "daily"]);

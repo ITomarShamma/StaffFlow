@@ -21,6 +21,7 @@ export const NAV: Record<Role, NavItem[]> = {
     { href: "/manager", label: ar.nav.board },
     { href: "/manager/decisions", label: ar.nav.leaveDecisions },
     { href: "/manager/summary", label: ar.nav.dailySummary },
+    { href: "/manager/monthly", label: ar.nav.monthlyReport },
     { href: "/manager/balances", label: ar.nav.leaveBalances },
   ],
 };
