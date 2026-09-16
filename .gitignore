@@ -16,3 +16,6 @@ coverage/
 Thumbs.db
 
 .claude/
+
+# Documents built from live data (employee names, breaks, leave reasons). Never commit.
+docs/private/

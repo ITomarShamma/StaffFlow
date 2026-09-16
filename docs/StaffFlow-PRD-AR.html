@@ -34,6 +34,23 @@
   }
 
   @page { size: A4; margin: 16mm 16mm 14mm; }
+  /* Screens get landscape pages so a 1440 px desktop capture stays legible (PRD 1.1). */
+  @page shots { size: A4 landscape; margin: 10mm 14mm 13mm; }
+
+  .shot-page { page: shots; break-before: page; break-after: page; break-inside: avoid; display: flex; flex-direction: column; gap: 6pt; }
+  .shot-page h2 { margin-block-end: 2pt; }
+  .shot-intro { margin: 0; font-size: 10pt; line-height: 1.65; }
+  figure { margin: 0; display: flex; flex-direction: column; gap: 6pt; }
+  figcaption { display: flex; flex-direction: column; gap: 1pt; text-align: start; }
+  .shot-title { font-family: var(--sans); font-size: 11pt; font-weight: 600; color: var(--navy); }
+  .shot-text { font-size: 10pt; line-height: 1.6; color: var(--body); }
+  .shot-refs { font-family: var(--sans); font-size: 8pt; color: var(--muted); }
+  figure img { display: block; height: auto; border: 0.75pt solid var(--rule); background: #F4F6FA; }
+  figure.single img { width: auto; max-width: 100%; max-height: 152mm; margin-inline: auto; }
+  .pair-row { display: flex; gap: 10mm; justify-content: center; align-items: flex-start; }
+  .pair-item { display: flex; flex-direction: column; align-items: center; gap: 3pt; }
+  .pair-item img { width: auto; max-width: 122mm; max-height: 118mm; }
+  .pair-label { font-family: var(--sans); font-size: 9pt; font-weight: 600; color: var(--muted); }
   * { box-sizing: border-box; }
 
   body {
@@ -144,8 +161,8 @@
     <div class="t ctrl">
       <table>
         <tbody>
-          <tr><th scope="row">الإصدار</th><td class="v">1.0</td><th scope="row">الحالة</th><td>للمراجعة والاعتماد</td></tr>
-          <tr><th scope="row">التاريخ</th><td class="v">10 أيلول 2026</td><th scope="row">النطاق</th><td>فرع واحد · <span class="v">14</span> مستخدماً</td></tr>
+          <tr><th scope="row">الإصدار</th><td class="v">1.1</td><th scope="row">الحالة</th><td>للمراجعة والاعتماد</td></tr>
+          <tr><th scope="row">التاريخ</th><td class="v">16 أيلول 2026</td><th scope="row">النطاق</th><td>فرع واحد · <span class="v">14</span> مستخدماً</td></tr>
         </tbody>
       </table>
     </div>
@@ -287,6 +304,7 @@
             <tr><th scope="row" class="rid">و-28</th><td>يلغي مقدّم الطلب طلبه ما دام قيد المراجعة.</td></tr>
             <tr><th scope="row" class="rid">و-29</th><td>الإجازة المعتمدة تغيّر حالة الموظف على اللوحة تلقائياً طوال مدتها.</td></tr>
             <tr><th scope="row" class="rid">و-30</th><td>يقدّم المشرف طلبات إجازته كأي موظف، ويعتمدها مدير الفرع.</td></tr>
+            <tr><th scope="row" class="rid">و-31</th><td>يُسجَّل وقت تقديم كل طلب من ساعة الخادم، ويظهر «وقت تسجيل الطلب» لمدير الفرع وللمشرف.</td></tr>
           </tbody>
         </table>
       </div>
@@ -295,9 +313,10 @@
       <div class="t">
         <table>
           <tbody>
-            <tr><th scope="row" class="rid">و-31</th><td>ملخص يومي لكل موظف: الرصيد المستخدم، وعدد ودقائق كل نوع، وعدد المكالمات، والتجاوزات، والإنهاء التلقائي، والتعديلات، وساعات الإجازة.</td></tr>
-            <tr><th scope="row" class="rid">و-32</th><td>اختيار أي يوم عبر تقويم، وتصدير الملخص ملفاً <span class="fig">CSV</span> يفتح بالعربية في جداول البيانات.</td></tr>
-            <tr><th scope="row" class="rid">و-33</th><td>جدول أرصدة الإجازات السنوية لكل موظف: المستخدم والمتبقي.</td></tr>
+            <tr><th scope="row" class="rid">و-32</th><td>ملخص يومي لكل موظف: الرصيد المستخدم، وعدد ودقائق كل نوع، وعدد المكالمات، والتجاوزات، والإنهاء التلقائي، والتعديلات، وساعات الإجازة.</td></tr>
+            <tr><th scope="row" class="rid">و-33</th><td>اختيار أي يوم عبر تقويم، وتصدير الملخص ملف <span class="fig">Excel</span> منسّقاً للطباعة — من اليمين إلى اليسار، بعنوان وترويسة مجمّعة وصف مجموع — أو ملفاً <span class="fig">CSV</span>.</td></tr>
+            <tr><th scope="row" class="rid">و-34</th><td>جدول أرصدة الإجازات السنوية لكل موظف: المستخدم والمتبقي.</td></tr>
+            <tr><th scope="row" class="rid">و-35</th><td>تقرير شهري يجمع الملخصات اليومية لأيام الدوام في الشهر حتى اليوم: لكل موظف أيام الدوام والرصيد المستخدم والمتوسط اليومي وعدد ودقائق كل نوع، مع صف مجموع للفريق وتصدير <span class="fig">Excel</span>.</td></tr>
           </tbody>
         </table>
       </div>
@@ -306,9 +325,10 @@
       <div class="t">
         <table>
           <tbody>
-            <tr><th scope="row" class="rid">و-34</th><td>دخول باسم مستخدم وكلمة مرور، مع رسالة خطأ واحدة لا تكشف أيّهما غير صحيح.</td></tr>
-            <tr><th scope="row" class="rid">و-35</th><td>ثلاثة أدوار، ويُتحقّق من الصلاحية في الخادم عند كل صفحة وكل إجراء، لا في المتصفّح.</td></tr>
-            <tr><th scope="row" class="rid">و-36</th><td>محاولة بلوغ صفحة خارج الصلاحية تُقابَل بصفحة «غير مصرح لك بالوصول إلى هذه الصفحة».</td></tr>
+            <tr><th scope="row" class="rid">و-36</th><td>دخول باسم مستخدم وكلمة مرور، مع رسالة خطأ واحدة لا تكشف أيّهما غير صحيح.</td></tr>
+            <tr><th scope="row" class="rid">و-37</th><td>ثلاثة أدوار، ويُتحقّق من الصلاحية في الخادم عند كل صفحة وكل إجراء، لا في المتصفّح.</td></tr>
+            <tr><th scope="row" class="rid">و-38</th><td>محاولة بلوغ صفحة خارج الصلاحية تُقابَل بصفحة «غير مصرح لك بالوصول إلى هذه الصفحة».</td></tr>
+            <tr><th scope="row" class="rid">و-39</th><td>تغيير كلمة المرور من شاشة الدخول: اسم المستخدم وكلمة المرور الحالية ثم الجديدة مرتين، ثمانية أحرف على الأقل ومختلفة عن الحالية. ويُنهي التغيير جلسات الحساب على كل الأجهزة، ويُسجَّل في سجل التدقيق.</td></tr>
           </tbody>
         </table>
       </div>
@@ -450,7 +470,7 @@
   </main>
 
   <footer>
-    شام كاش · فرع خدمة العملاء — <span class="fig">StaffFlow</span> · وثيقة متطلبات المنتج، الإصدار <span class="v">1.0</span> · مستند داخلي
+    شام كاش · فرع خدمة العملاء — <span class="fig">StaffFlow</span> · وثيقة متطلبات المنتج، الإصدار <span class="v">1.1</span> · مستند داخلي
   </footer>
 
 </div>
